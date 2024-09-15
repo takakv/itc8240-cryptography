@@ -1,0 +1,243 @@
+\documentclass{practice}
+
+\title{1}
+\date{\DTMdate{2024-09-11}}
+
+\DeclareMathOperator*{\IC}{IC}
+\DeclareMathOperator*{\mIC}{\IC_M}
+
+\begin{document}
+\maketitle
+
+\begin{task}{Shift cipher}
+  Encrypt the message \texttt{SUPERSECRET} with the key \enquote{3} and alphabet \{C, E, P, R, S, T, U\}.
+
+  How many possible keys can there be?
+\end{task}
+
+\begin{task}{Substitution cipher}
+  Decrypt the message \texttt{LCSSOHTC} encrypted with the key
+  \begin{figure}[h!]
+    \centering
+    \begin{tabular}{@{}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}C{.9em}@{}}
+      A & B & C & D & E & F & G & H & I & J & K & L & M & \dots\\\midrule
+      A & N & B & O & C & P & D & Q & E & R & F & S & G & \dots\\\\
+      \dots & N & O & P & Q & R & S & T & U & V & W & X & Y & Z \\\midrule
+      \dots & T & H & U & I & V & J & W & K & X & L & Y & M & Z \par
+    \end{tabular}
+  \end{figure}
+  % Should be: WELLDONE
+  \vspace*{-1em}
+
+  How many texts can there be? Can we count them?
+\end{task}
+
+\begin{task}{Permutation cipher}
+  Decrypt the message \texttt{WHPTUCIIST} encrypted with the key
+  \begin{figure}[h!]
+    \centering
+    \begin{tabular}{@{}c c c c c c c c c c@{}}
+      1 & 2 & 3 & 4  & 5 & 6 & 7 & 8 & 9 & 10\\\midrule
+      9 & 1 & 7 & 10 & 6 & 2 & 8 & 4 & 5 & 3
+    \end{tabular}
+  \end{figure}
+  % Should be: SWITCHITUP
+  \vspace*{-1em}
+
+  How many possible permutations can there be for this message?
+\end{task}
+
+\begin{task}{Attacking a shift cipher}
+  Consider the message \texttt{VNZHAOERNXNOYR}.
+  Attempt to break it via:
+  \begin{enumerate}
+    \item Brute force
+    \item CPA
+    \item CCA
+  \end{enumerate}
+  For the latter two, describe the strategy instead of conducting the attack since you do not actually have access to the encryption/decryption oracle.
+  % ROT 13 - special case due to being its own inverse
+  % IAMUNBREAKABLE
+\end{task}
+
+\newpage
+
+\begin{task}{Attacking a substitution cipher}
+  Consider the message
+\begin{Verbatim}
+PVHYVURZVJVIHKUFFPAMAEAMMKRAMFVTAEKSUMAXTAFSHKUF
+FPAEFVTAEKSUMAXTAFLVTKMYVURKMEAUKTAXKCKGYAVLANSY
+\end{Verbatim}
+Attempt to break it via:
+  \begin{enumerate}
+    \item Analysis + guessing (see \autoref{fig:englishfreq} for English letter frequencies)
+    \item CPA: describe your strategy
+  \end{enumerate}
+  % abcdefghijklmnopqrstuvwxyz
+  % kgxzalrpsoqyeuvcdtmfinhwjb
+
+  % HOWLONGDOYOUWANTTHESEMESSAGESTOREMAINSECRETIWANT
+  % THEMTOREMAINSECRETFORASLONGASMENARECAPABLEOFEVIL
+  % - Cryptonomicon
+\end{task}
+
+\begin{task}{Attacking an affine cipher}
+  Let $\mathcal{A}$ be an alphabet and let $\mathcal{A}^*$ denote the set of all possible messages made from the letters of this alphabet.
+  Let $l = \lvert\mathcal{A}\rvert$ denote the size of the alphabet, i.e. the number of (distinct) letters in $\mathcal{A}$.
+
+  An affine cipher is a monoalphabetic substitution cipher and is a generalisation of the shift cipher.
+  The encryption and decryption functions of the affine cipher are defined as
+  \begin{align*}
+    \Enc_{(a, b)}(x) &= (ax + b) \bmod l\\
+    \Dec_{(a,b)}(y) &= a^{-1}(y - b) \bmod l
+  \end{align*}
+  Notice that decryption only works when $\gcd(a, l) = 1$, i.e. when $a$ and $l$ are \emph{coprime}.
+  If not, $a$ does not have a multiplicative inverse modulo $l$.
+  This condition must thus be taken into account when sampling the key $k=(a,b)$.
+
+  You are given the challenge ciphertext \enquote{npagcv} and a plaintext-ciphertext pair (\enquote{cipher}, \enquote{swfrcp}).
+  Perform a known-plaintext attack (KPA) against the English affine cipher to recover the key and then decrypt the challenge ciphertext.
+
+  \begin{tcolorbox}[title=KPA]
+    An attacker is given a ciphertext $y$ and plaintext-ciphertext pairs $(x_1, y_1), \dots, (x_n, y_n)$.
+    The attacker must then decrypt $y$.
+    \tcblower
+    The difference between KPA and CPA is that in CPA, the attacker can query the ciphertexts for plaintext of their choosing.
+    Here, the plaintext-ciphertext pairs are fixed for the attacker.
+  \end{tcolorbox}
+  % broken
+\end{task}
+
+\begin{task}{Index of coincidence}
+  Compute the IC of:
+  \enquote{Don't roll your own Crypto!}
+  % IC = 0.08095
+
+  Compute the IC of: \enquote{The enemy knows the system.}
+  % IC = 0.08658
+
+  What do you predict the mutual index of coincidence of both sentences to be?
+  Calculate it --- how close was your guess?
+  If your guess missed ($> \pm 0.15$), is the true result surprising?
+  % mIC = 0.04329
+\end{task}
+
+\begin{task}{Breaking Vigenere}
+  Decrypt the message
+\begin{Verbatim}
+GHFZSGOSSARAJFTWJNBZOVRAGHFZSGOSSARAJFSJVYSOKYMSWF
+HWJGUAFRFWLVBCLUWOVNHWTRTKJRKASESXGEBSZRBPWPVJGYCC
+ARGZWGSYLHGEFHHAJBOJVBINVNHWOVZHUBBPAAIALBDNGYWBWE
+OPWRJAFNTPWEKAVVSKXPCQJFSKMEQKFFQEGHGHQPFASGSZERAK
+JVSOLUSNWPCNVFHDSGKAUUCKKRHKCRSLUBALJVGABHGPSFZENR
+FKXGVAAATKJZOPABBPZNHDSFPAWAKNMAUKMGCBGHFHAISOEBGP
+GSWPMAQKFFQEGHGHQBFSAGVKMGCQJPCJKRBPTLPQKVBAKFOJVT
+CRWEBIWAHOMEJAAYZWFPSSWNFALUSBAEGPHRCLDRWJLUSDAFHK
+JLCBLUSLDNBALSCNOUCILUWOAFHNMRHDWSWNKGDAGCZALBPATH
+FZWASZOVHDVNHWAZAKJGOHAGMPZRTWUGHDSGCQJPCHDRQPWQFA
+UBFZKZWCZGVWNROJWGSNFNZAPVGPWAQALUWOAFKDQJSDSISWKC
+SYANZZMGMSWZIOLRBOMESPZNHPZRGAJRQKJQGKXBINHNGPKPOJ
+LOSPMEBAVNUWAAGPMFCNLHFJWQOCSVBOLBINUUWHVESJ
+\end{Verbatim}
+  Attempt to break it via:
+  \begin{enumerate}
+    \item CPA: describe your strategy
+    \item Kasiski with IC
+    \begin{itemize}
+      \item Problem with Kasiski: hard to find substrings manually\footnotemark{}.
+      \footnotetext{Algorithms are not trivial either, e.g. suffix trees.}
+      \item To practice: \texttt{LU} occurs at positions $64, 204, 231, 376, 392, 404, 420, 532$.
+      \item Mutual indices of coincidence for the recovered\footnotemark{} key-lengths are displayed in \autoref{table:mICs}.
+      \footnotetext{Either by Kasiski's analysis or by brute-force with ICs.}
+    \end{itemize}
+  \end{enumerate}
+  % Key: SNOW
+\end{task}
+
+\newpage
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}l l@{}}
+    $i, j$ & $\mIC\bigl(Y_i, \Dec_s(Y_j)\bigr)$ for $s = 0, 1, \dots, 25$\\
+    \midrule
+    \multirow{3}{*}{$0, 1$} &
+      0.032 0.040 0.031 0.034 0.042 0.068 0.043 0.033 0.034\\
+      &
+      0.042 0.030 0.038 0.033 0.032 0.036 0.042 0.042 0.041\\
+      &
+      0.044 0.037 0.049 0.043 0.039 0.028 0.033 0.035\\\midrule
+    \multirow{3}{*}{$1, 2$} &
+      0.041 0.036 0.034 0.041 0.033 0.038 0.036 0.032 0.036\\
+      &
+      0.034 0.040 0.040 0.046 0.041 0.048 0.044 0.036 0.029\\
+      &
+      0.033 0.037 0.031 0.042 0.028 0.034 0.041 0.070\\\midrule
+    \multirow{3}{*}{$2, 3$} &
+      0.036 0.037 0.040 0.046 0.037 0.048 0.043 0.046 0.037\\
+      &
+      0.035 0.031 0.032 0.034 0.032 0.038 0.037 0.036 0.041\\
+      &
+      0.073 0.043 0.031 0.030 0.044 0.031 0.028 0.034\\\midrule
+  \end{tabular}
+  \caption{Mutual indices of coincidence for key-length $4$.}
+  \label{table:mICs}
+\end{table}
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccccccccccc@{}}
+    A  & B  & C  & D  & E  & F  & G  & H  & I  & J  & K  & L  & M & \dots\\\midrule
+    1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & 11 & 12 & 13 & \dots\\\\
+    \dots & N  & O  & P  & Q  & R  & S  & T  & U  & V  & W  & X  & Y  & Z\\\midrule
+    \dots & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25 & 26
+  \end{tabular}
+  \caption{The English alphabet}
+  \label{table:alphabet}
+\end{table}
+
+\newpage
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        symbolic x coords={E,T,A,O,I,N,S,R,H,D,L,U,C,M,F,Y,W,G,P,B,V,K,X,Q,J,Z},
+        xtick=data,
+        ylabel={Frequency in \%},
+        width=\textwidth]
+        \addplot[ybar,fill=gray] coordinates {
+            (E,012.02)
+            (T,009.10)
+            (A,008.12)
+            (O,007.68)
+            (I,007.31)
+            (N,006.95)
+            (S,006.28)
+            (R,006.02)
+            (H,005.92)
+            (D,004.32)
+            (L,003.98)
+            (U,002.88)
+            (C,002.71)
+            (M,002.61)
+            (F,002.30)
+            (Y,002.11)
+            (W,002.09)
+            (G,002.03)
+            (P,001.82)
+            (B,001.49)
+            (V,001.11)
+            (K,000.69)
+            (X,000.17)
+            (Q,000.11)
+            (J,000.10)
+            (Z,000.07)
+        };
+    \end{axis}
+  \end{tikzpicture}
+  \caption{English letter frequencies}
+  \label{fig:englishfreq}
+\end{figure}
+
+\end{document}
