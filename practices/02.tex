@@ -1,0 +1,138 @@
+\documentclass{practice}
+
+\title{2}
+\date{\DTMdate{2024-09-18}}
+
+\DeclareMathOperator*{\IC}{IC}
+\DeclareMathOperator*{\mIC}{\IC_M}
+
+\begin{document}
+\maketitle
+
+\begin{task}{Identifying ciphers}
+  Given the ciphertext \texttt{JPOWLY} and the plaintexts
+  \begin{itemize}
+    \item \texttt{CIPHER}
+    \item \texttt{ENCDEC}
+    \item \texttt{SHIFT}
+    \item \texttt{TRYSUB}
+  \end{itemize}
+  determine for each plaintext whether the corresponding ciphertext could have been obtained with: the shift cipher, the simple substitution cipher, the one time pad.
+  If not, explain why.
+\end{task}
+
+\begin{task}{A fair coin\dots}
+  Suppose that you toss a fair coin twice.
+  Let $X$ be defined as the number of heads you observe.
+
+  Find the range of $X$ as well as its probability mass function.
+\end{task}
+
+\begin{task}{\dots{}but biased dice}
+  Suppose now that you roll two dice, one of which is balanced, but the other one is weighted
+  so as to give the probabilities:
+  \begin{table}[h!]
+    \centering
+    \begin{tabular}{@{}cccccc@{}}
+      1 & 2 & 3 & 4 & 5 & 6\\\midrule
+      $1/9$ & $2/9$ & $1/9$ & $2/9$ & $1/9$ & $2/9$
+    \end{tabular}
+  \end{table}
+  \vspace{-0.7em}
+
+  Let $X$ be defined as the sum of the face values.
+  Find the range of $X$ as well as its probability mass function.
+\end{task}
+
+\begin{task}{Conditional probability}
+  Let $A$, $B$ be two events, each with a probability $\frac{1}{3}$ of happening.
+  With probability $\frac{1}{3}$, neither event happens.
+
+  What is the probability $\Pr[A\vert B]$, i.e. that $A$ happens knowing that $B$ happened.
+\end{task}
+
+\begin{task}{XOR}
+  Write out the truth table for the XOR binary operation, which we write as $\oplus$.
+  Then, answer the following:
+  \begin{itemize}
+    \item Is XOR associative?
+    \item Is XOR commutative?
+    \item What is the inverse of an element under XOR?
+    \item What is the identity element under XOR?
+  \end{itemize}
+\end{task}
+
+\begin{task}{Identify the message}
+  Given the ciphertext $c$ encrypted with the key $k$ using OTP with
+  \begin{align*}
+    c &= \texttt{11100011 00011101 10000110}\\
+    k &= \texttt{10101100 01001001 11010110}
+  \end{align*}
+  find the plaintext message.
+  Use the ASCII table given in \autoref{table:asciiupper} to convert it to a meaningful word.
+
+  \begin{table}[h!]
+    \centering
+    \begin{tabular}{@{}lcccccccccccccc@{}}
+      Letter & A  & B  & C  & D  & E  & F  & G  & H  & I  & J  & K  & L  & M & \dots\\\midrule
+      DEC & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & \dots\\
+      HEX & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 4A & 4B & 4C & 4D & \dots\\\\
+      Letter & \dots & N  & O  & P  & Q  & R  & S  & T  & U  & V  & W  & X  & Y  & Z\\\midrule
+      DEC & \dots & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 & 90\\
+      HEX & \dots & 4E & 4F & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 5A
+    \end{tabular}
+    \caption{ASCII character codes of capital English letters.}
+    \label{table:asciiupper}
+  \end{table}
+\end{task}
+
+\begin{task}{A lack of information}
+  Given the ciphertext $c = \texttt{10111010 01001101 00010101}$ encrypted with the OTP using one of the following keys recovered via brute-force:
+  \begin{align*}
+    k_1 &= \texttt{11111001 00001100 01000001}\\
+    k_2 &= \texttt{11111110 00000010 01010010}\\
+    k_3 &= \texttt{11110101 00011010 01011001}
+  \end{align*}
+  determine whether I am a cat, a dog, or an owl person.
+
+  If the ciphertext was obtained via a monoalphabetic substitution, could you then be able to tell the correct answer?
+\end{task}
+
+\begin{task}{Many-time-pad}
+  I just learnt about the OTP and want to exchange a message with my friend.
+  However, because I am now a professional cryptographer after last week's class, I have decided to optimise the OTP:
+  I use a key that's half the size of the message, and use the key on both halves similar to Vigenere's key repetition.
+
+  Suppose that Eve the eavesdropper sees my sent ciphertext.
+  Can she possibly decrypt the message?
+  After all, the OTP is unconditionally secure\dots{} right?
+  
+  What is the type of attack called that Eve must perform (e.g. KPA, CPA, \dots)?
+  Is it active or passive?
+\end{task}
+
+\begin{task}{Unicity distance}
+  Compute the unicity distance of the following ciphers:
+  \begin{itemize}
+    \item Caesar's cipher
+    \item Affine cipher
+    \item Vigenere cipher (in terms of key-length $n$)
+  \end{itemize}
+\end{task}
+
+\begin{task}{Malleability}
+  Consider the ASCII string \enquote{RAND}, a random key $k$, and the OTP ciphertext $c$, with:
+  \begin{align*}
+    m &= \texttt{01010010 01000001 01001110 01000100}\\
+    k &= \texttt{01000011 01011000 11011011 10100101}\\
+    c &= \texttt{00010001 00011001 10010101 11100001}
+  \end{align*}
+
+  Suppose now that Eve flips the \emph{least significant bit} of the first byte of the ciphertext, i.e. the rightmost bit of the first ciphertext block of bits.
+  Eve then forwards the message to Bob who thinks that the message comes from Alice.
+  What message will Bob decrypt?
+  What problems do you think arise from the malleability of a cipher?
+\end{task}
+
+
+\end{document}
