@@ -1,0 +1,210 @@
+\begin{tikzpicture}[every node/.style={inner sep=0,outer sep=0}]
+  \foreach \x in {1,...,4} {
+    \node (s-1-\x) at ($\x*(5em,0)$) [
+      minimum width=4em,
+      minimum height=2em,
+      fill=gray!20,draw] {$S$};
+
+    \node (b1-1-tb-\x) at ($(s-1-\x.north)-(1.5em,0)$) {};
+    \node (b2-1-tb-\x) at ($(s-1-\x.north)-(0.5em,0)$) {};
+    \node (b3-1-tb-\x) at ($(s-1-\x.north)+(0.5em,0)$) {};
+    \node (b4-1-tb-\x) at ($(s-1-\x.north)+(1.5em,0)$) {};
+
+    \node (b1-1-tt-\x) [above of=b1-1-tb-\x, node distance=0.5em] {};
+    \node (b2-1-tt-\x) [above of=b2-1-tb-\x, node distance=0.5em] {};
+    \node (b3-1-tt-\x) [above of=b3-1-tb-\x, node distance=0.5em] {};
+    \node (b4-1-tt-\x) [above of=b4-1-tb-\x, node distance=0.5em] {};
+
+    \node (b1-1-bt-\x) at ($(s-1-\x.south)-(1.5em,0)$) {};
+    \node (b2-1-bt-\x) at ($(s-1-\x.south)-(0.5em,0)$) {};
+    \node (b3-1-bt-\x) at ($(s-1-\x.south)+(0.5em,0)$) {};
+    \node (b4-1-bt-\x) at ($(s-1-\x.south)+(1.5em,0)$) {};
+
+    \node (b1-1-bb-\x) [below of=b1-1-bt-\x, node distance=0.5em] {};
+    \node (b2-1-bb-\x) [below of=b2-1-bt-\x, node distance=0.5em] {};
+    \node (b3-1-bb-\x) [below of=b3-1-bt-\x, node distance=0.5em] {};
+    \node (b4-1-bb-\x) [below of=b4-1-bt-\x, node distance=0.5em] {};
+
+    \draw[thick] ($(b1-1-tb-\x)$) -- ($(b1-1-tt-\x)$);
+    \draw[thick] ($(b2-1-tb-\x)$) -- ($(b2-1-tt-\x)$);
+    \draw[thick] ($(b3-1-tb-\x)$) -- ($(b3-1-tt-\x)$);
+    \draw[thick] ($(b4-1-tb-\x)$) -- ($(b4-1-tt-\x)$);
+
+    \draw[thick] ($(b1-1-bt-\x)$) -- ($(b1-1-bb-\x)$);
+    \draw[thick] ($(b2-1-bt-\x)$) -- ($(b2-1-bb-\x)$);
+    \draw[thick] ($(b3-1-bt-\x)$) -- ($(b3-1-bb-\x)$);
+    \draw[thick] ($(b4-1-bt-\x)$) -- ($(b4-1-bb-\x)$);
+
+    \node (b1-k1-tt-\x) [below of=b1-1-bb-\x, node distance=2em] {};
+    \node (b2-k1-tt-\x) [below of=b2-1-bb-\x, node distance=2em] {};
+    \node (b3-k1-tt-\x) [below of=b3-1-bb-\x, node distance=2em] {};
+    \node (b4-k1-tt-\x) [below of=b4-1-bb-\x, node distance=2em] {};
+
+    \node (b1-k1-tb-\x) [below of=b1-k1-tt-\x, node distance=0.5em] {};
+    \node (b2-k1-tb-\x) [below of=b2-k1-tt-\x, node distance=0.5em] {};
+    \node (b3-k1-tb-\x) [below of=b3-k1-tt-\x, node distance=0.5em] {};
+    \node (b4-k1-tb-\x) [below of=b4-k1-tt-\x, node distance=0.5em] {};
+
+    \draw[thick] ($(b1-k1-tt-\x)$) -- ($(b1-k1-tb-\x)$);
+    \draw[thick] ($(b2-k1-tt-\x)$) -- ($(b2-k1-tb-\x)$);
+    \draw[thick] ($(b3-k1-tt-\x)$) -- ($(b3-k1-tb-\x)$);
+    \draw[thick] ($(b4-k1-tt-\x)$) -- ($(b4-k1-tb-\x)$);
+  }
+
+  \foreach \x in {1,...,4} {
+    \node (s-2-\x) at ($\x*(5em,0)-(0, 7.5em)$) [
+      minimum width=4em,
+      minimum height=2em,
+      fill=gray!20,draw] {$S$};
+
+    \node (b1-2-tb-\x) at ($(s-2-\x.north)-(1.5em,0)$) {};
+    \node (b2-2-tb-\x) at ($(s-2-\x.north)-(0.5em,0)$) {};
+    \node (b3-2-tb-\x) at ($(s-2-\x.north)+(0.5em,0)$) {};
+    \node (b4-2-tb-\x) at ($(s-2-\x.north)+(1.5em,0)$) {};
+
+    \node (b1-2-tt-\x) [above of=b1-2-tb-\x, node distance=0.5em] {};
+    \node (b2-2-tt-\x) [above of=b2-2-tb-\x, node distance=0.5em] {};
+    \node (b3-2-tt-\x) [above of=b3-2-tb-\x, node distance=0.5em] {};
+    \node (b4-2-tt-\x) [above of=b4-2-tb-\x, node distance=0.5em] {};
+
+    \node (b1-2-bt-\x) at ($(s-2-\x.south)-(1.5em,0)$) {};
+    \node (b2-2-bt-\x) at ($(s-2-\x.south)-(0.5em,0)$) {};
+    \node (b3-2-bt-\x) at ($(s-2-\x.south)+(0.5em,0)$) {};
+    \node (b4-2-bt-\x) at ($(s-2-\x.south)+(1.5em,0)$) {};
+
+    \node (b1-2-bb-\x) [below of=b1-2-bt-\x, node distance=0.5em] {};
+    \node (b2-2-bb-\x) [below of=b2-2-bt-\x, node distance=0.5em] {};
+    \node (b3-2-bb-\x) [below of=b3-2-bt-\x, node distance=0.5em] {};
+    \node (b4-2-bb-\x) [below of=b4-2-bt-\x, node distance=0.5em] {};
+
+    \draw[thick] ($(b1-2-tb-\x)$) -- ($(b1-2-tt-\x)$);
+    \draw[thick] ($(b2-2-tb-\x)$) -- ($(b2-2-tt-\x)$);
+    \draw[thick] ($(b3-2-tb-\x)$) -- ($(b3-2-tt-\x)$);
+    \draw[thick] ($(b4-2-tb-\x)$) -- ($(b4-2-tt-\x)$);
+
+    \draw[thick] ($(b1-2-bt-\x)$) -- ($(b1-2-bb-\x)$);
+    \draw[thick] ($(b2-2-bt-\x)$) -- ($(b2-2-bb-\x)$);
+    \draw[thick] ($(b3-2-bt-\x)$) -- ($(b3-2-bb-\x)$);
+    \draw[thick] ($(b4-2-bt-\x)$) -- ($(b4-2-bb-\x)$);
+
+    \node (b1-k2-tt-\x) [below of=b1-2-bb-\x, node distance=2em] {};
+    \node (b2-k2-tt-\x) [below of=b2-2-bb-\x, node distance=2em] {};
+    \node (b3-k2-tt-\x) [below of=b3-2-bb-\x, node distance=2em] {};
+    \node (b4-k2-tt-\x) [below of=b4-2-bb-\x, node distance=2em] {};
+
+    \node (b1-k2-tb-\x) [below of=b1-k2-tt-\x, node distance=0.5em] {};
+    \node (b2-k2-tb-\x) [below of=b2-k2-tt-\x, node distance=0.5em] {};
+    \node (b3-k2-tb-\x) [below of=b3-k2-tt-\x, node distance=0.5em] {};
+    \node (b4-k2-tb-\x) [below of=b4-k2-tt-\x, node distance=0.5em] {};
+
+    \draw[thick] ($(b1-k2-tt-\x)$) -- ($(b1-k2-tb-\x)$);
+    \draw[thick] ($(b2-k2-tt-\x)$) -- ($(b2-k2-tb-\x)$);
+    \draw[thick] ($(b3-k2-tt-\x)$) -- ($(b3-k2-tb-\x)$);
+    \draw[thick] ($(b4-k2-tt-\x)$) -- ($(b4-k2-tb-\x)$);
+  }
+
+  \foreach \x in {1,...,4} {
+    \node (s-3-\x) at ($\x*(5em,0)-(0, 15em)$) [
+      minimum width=4em,
+      minimum height=2em,
+      fill=gray!20,draw] {$S$};
+
+    \node (b1-3-tb-\x) at ($(s-3-\x.north)-(1.5em,0)$) {};
+    \node (b2-3-tb-\x) at ($(s-3-\x.north)-(0.5em,0)$) {};
+    \node (b3-3-tb-\x) at ($(s-3-\x.north)+(0.5em,0)$) {};
+    \node (b4-3-tb-\x) at ($(s-3-\x.north)+(1.5em,0)$) {};
+
+    \node (b1-3-tt-\x) [above of=b1-3-tb-\x, node distance=0.5em] {};
+    \node (b2-3-tt-\x) [above of=b2-3-tb-\x, node distance=0.5em] {};
+    \node (b3-3-tt-\x) [above of=b3-3-tb-\x, node distance=0.5em] {};
+    \node (b4-3-tt-\x) [above of=b4-3-tb-\x, node distance=0.5em] {};
+
+    \node (b1-3-bt-\x) at ($(s-3-\x.south)-(1.5em,0)$) {};
+    \node (b2-3-bt-\x) at ($(s-3-\x.south)-(0.5em,0)$) {};
+    \node (b3-3-bt-\x) at ($(s-3-\x.south)+(0.5em,0)$) {};
+    \node (b4-3-bt-\x) at ($(s-3-\x.south)+(1.5em,0)$) {};
+
+    \node (b1-3-bb-\x) [below of=b1-3-bt-\x, node distance=0.5em] {};
+    \node (b2-3-bb-\x) [below of=b2-3-bt-\x, node distance=0.5em] {};
+    \node (b3-3-bb-\x) [below of=b3-3-bt-\x, node distance=0.5em] {};
+    \node (b4-3-bb-\x) [below of=b4-3-bt-\x, node distance=0.5em] {};
+
+    \draw[thick] ($(b1-3-tb-\x)$) -- ($(b1-3-tt-\x)$);
+    \draw[thick] ($(b2-3-tb-\x)$) -- ($(b2-3-tt-\x)$);
+    \draw[thick] ($(b3-3-tb-\x)$) -- ($(b3-3-tt-\x)$);
+    \draw[thick] ($(b4-3-tb-\x)$) -- ($(b4-3-tt-\x)$);
+
+    \draw[thick] ($(b1-3-bt-\x)$) -- ($(b1-3-bb-\x)$);
+    \draw[thick] ($(b2-3-bt-\x)$) -- ($(b2-3-bb-\x)$);
+    \draw[thick] ($(b3-3-bt-\x)$) -- ($(b3-3-bb-\x)$);
+    \draw[thick] ($(b4-3-bt-\x)$) -- ($(b4-3-bb-\x)$);
+  }
+
+  % P-boxes
+
+  \foreach \i in {1,2} {
+    \draw[thick] ($(b1-\i-bb-1)$) -- ($(b1-k\i-tt-1)$);
+    \draw[thick] ($(b4-\i-bb-4)$) -- ($(b4-k\i-tt-4)$);
+
+    \draw[thick] ($(b2-\i-bb-1)$) -- ($(b1-k\i-tt-2)$);
+    \draw[thick] ($(b3-\i-bb-4)$) -- ($(b4-k\i-tt-3)$);
+
+    \draw[thick] ($(b3-\i-bb-1)$) -- ($(b1-k\i-tt-3)$);
+    \draw[thick] ($(b2-\i-bb-4)$) -- ($(b4-k\i-tt-2)$);
+
+    \draw[thick] ($(b4-\i-bb-1)$) -- ($(b1-k\i-tt-4)$);
+    \draw[thick] ($(b1-\i-bb-4)$) -- ($(b4-k\i-tt-1)$);
+
+    \draw[thick] ($(b1-\i-bb-2)$) -- ($(b2-k\i-tt-1)$);
+    \draw[thick] ($(b4-\i-bb-3)$) -- ($(b3-k\i-tt-4)$);
+
+    \draw[thick] ($(b2-\i-bb-2)$) -- ($(b2-k\i-tt-2)$);
+    \draw[thick] ($(b3-\i-bb-3)$) -- ($(b3-k\i-tt-3)$);
+
+    \draw[thick] ($(b2-\i-bb-2)$) -- ($(b2-k\i-tt-2)$);
+    \draw[thick] ($(b3-\i-bb-3)$) -- ($(b3-k\i-tt-3)$);
+
+    \draw[thick] ($(b3-\i-bb-2)$) -- ($(b2-k\i-tt-3)$);
+    \draw[thick] ($(b2-\i-bb-3)$) -- ($(b3-k\i-tt-2)$);
+
+    \draw[thick] ($(b4-\i-bb-2)$) -- ($(b2-k\i-tt-4)$);
+    \draw[thick] ($(b1-\i-bb-3)$) -- ($(b3-k\i-tt-1)$);
+  }
+
+  % XOR boxes
+
+  \foreach \i in {1,2} {
+    \node (m{\i}t) at ($(b1-k\i-tb-1)!0.5!(b4-k\i-tb-4)$) {};
+    \node (m{\i}m) [below of=m{\i}t, node distance=1em] {};
+    \node[rectangle,draw,fill=gray!20,
+      minimum height=2em,
+      minimum width=19em] (r\i) at (m{\i}m) {$\oplus k_\i$};
+  }
+
+  \node (m0t) at ($(b1-1-tt-1)!0.5!(b4-1-tt-4)$) {};
+  \node (m0m) [above of=m0t, node distance=1em] {};
+  \node[rectangle,draw,fill=gray!20,
+    minimum height=2em,
+    minimum width=19em] (r0) at (m0m) {$\oplus k_0$};
+
+  \node (m3t) at ($(b1-3-bb-1)!0.5!(b4-3-bb-4)$) {};
+  \node (m3m) [below of=m3t, node distance=1em] {};
+  \node[rectangle,draw,fill=gray!20,
+    minimum height=2em,
+    minimum width=19em] (r3) at (m3m) {$\oplus k_3$};
+
+  % Input
+
+  \node (in-b) at (r0.north) {};
+  \node (in-t) [above of=in-b, node distance=0.5em] {};
+  \draw[thick] ($(in-t)$) -- ($(in-b)$);
+  \node (m) [above of=in-t, node distance=0.5em] {$m$};
+
+  % Output
+
+  \node (out-t) at (r3.south) {};
+  \node (out-b) [below of=out-t, node distance=0.5em] {};
+  \draw[thick] ($(out-t)$) -- ($(out-b)$);
+  \node (ct) [below of=out-b, node distance=0.5em] {$c$};
+
+\end{tikzpicture}
