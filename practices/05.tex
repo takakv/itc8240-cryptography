@@ -1,0 +1,107 @@
+\documentclass{practice}
+
+\usepackage[dvipsnames]{xcolor}
+
+\title{5}
+\date{\DTMdate{2024-10-09}}
+
+\usetikzlibrary{positioning,calc}
+
+\usepackage{listings}
+
+\begin{document}
+\maketitle
+
+Let $\log{n}$ denote the binary logarithm, i.e. $\log{n} = \log_2{n}$.
+
+\begin{task}{Function growth}
+  % https://ggc-discrete-math.github.io/growth_functions.html
+  Order the following functions by growth:
+  \[
+    \log n,\quad
+    1,\quad
+    n^3,\quad
+    2^n,\quad
+    \sqrt[\leftroot{-2}\uproot{2}3]{n},\quad
+    n,\quad
+    n^n,\quad
+    \sqrt{n},\quad
+    3^n,\quad
+    n^2,\quad
+    n!
+  \]
+
+  Then, order the following by growth:
+  \[
+    n \log n,\quad
+    n^2,\quad
+    n^{4/3}
+  \]
+\end{task}
+
+\begin{task}{Estimate the $\Oh\bigl(f(n)\bigr)$}
+  % https://sbme-tutorials.github.io/2020/data-structures/notes/week04.html#exercise-estimate-the-ofn
+  Find the Big-$\Oh$ and prove it according to the definition.
+  \begin{itemize}
+    \item $f(n) = 2n + 3n^2 + 100$
+    \item $f(n) = -7n^3 - n^2 + n - 3$
+    \item $f(n) = \log(n) + 5n$
+    \item $f(n) = 10 + 2^n + 2n^2$
+    \item $f(n) = n \log(n) + n^{1.5}$ \textit{(challenge)}
+  \end{itemize}
+\end{task}
+
+\begin{task}{Prove or disprove}
+  % https://cadmo.ethz.ch/education/lectures/HS22/DA/theory_exercises/Homework%2002.pdf
+  Prove or disprove the following statements.
+  \begin{itemize}
+    \item $2\log(n) + n^2 +5 = \Oh(\log{n})$
+    \item $e^{1.2n} = \Oh(e^n)$
+    \item $n^{\frac{2n + 3}{n+1}} = \Oh\bigl(n^2\bigr)$ \textit{(challenge)}
+  \end{itemize}
+\end{task}
+
+\begin{task}{Algorithmics}
+  % https://www.cs.cmu.edu/~15110/practice/unit2/runtime-bigO.html
+  Find Big-$\Oh$ for the following algorithms.
+  \begin{itemize}
+    \item An algorithm that makes two separate passes through a list of $n$ elements.
+    \item An algorithm that checks each element of a list against every other element.
+    \item The following recursive Python function:
+    \begin{lstlisting}
+def recursive_function(n):
+    if n == 1:
+        return n
+    else:
+        return recursive_function(n - 1)
+    \end{lstlisting}
+    \item The following Python function:
+    \begin{lstlisting}
+def process_data(data):
+    total = 0
+    for i in range(0, len(data), 2):  # increment by 2
+        total += data[i]
+    return total
+    \end{lstlisting}
+    \item The following Python function:
+    \begin{lstlisting}
+def swap(lst, i, j): # n = len(lst)
+    tmp = lst[i]
+    lst[i] = lst[j]
+    lst[j] = tmp
+    \end{lstlisting}
+  \end{itemize}
+\end{task}
+
+\begin{task}{Complexity of common operations}
+  Find the runtime complexity of the following operations, assuming that $a$, $b, c$ are $n$-bit integers.
+  \begin{itemize}
+    \item $a \oplus b$
+    \item $a + b$
+    \item $a \cdot b$
+    \item $(a + b) \bmod c$
+    \item $\gcd(a, b)$
+  \end{itemize}
+\end{task}
+
+\end{document}
