@@ -44,7 +44,8 @@
 \def\@maketitle{%
   \newpage
   \begin{center}%
-    {Practice session \@title{} --- \@date\par}%
+    {Practice session \@title{} --- \@date}\\
+    {\@subtitle{}\par}%
   \end{center}%
   \par}
 \makeatother
