@@ -1,0 +1,154 @@
+\documentclass{homework}
+
+\usepackage{fancyvrb}
+\fvset{listparameters=\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}}
+
+\title{01}
+\author{Taaniel Kraavi}
+\date{\DTMdate{2024-10-18}}
+
+\begin{document}
+\maketitle
+
+\textbf{Organisational details}
+\begin{itemize}
+  \item You can submit assignments up to 1 week late, however, late assignments incur a 50\% grade penalty.
+  After the 1 week grace period the assignment's grade will be 0.
+  \item Your submission must be a PDF.
+  You can write solutions by hand and scan/photograph them, or write them using \LaTeX{} (recommended).
+  If you use MS Word, you must use the equation editor for typesetting the mathematics.
+  \begin{itemize}
+    \item If you write solutions by hand, please make sure that the scans/pictures are of good quality (high resolution, good contrast, no blur).
+    \item If your submission is not legible or is otherwise of poor quality (e.g. crossed out solutions, scribbles, \dots) we will not grade the impacted task(s).
+    \item If you write code to help you solve tasks, add the code file(s) to your Moodle submission or push the code to a \emph{private} GitHub repository.
+    Add \texttt{takakv} as a collaborator.
+  \end{itemize}
+  \item You must explicitly write out the reasoning for your solutions.
+  Providing an unexplained answer will give you no points.
+  \begin{itemize}
+    \item Brute force is not a solution!
+    \item If you write code, you must comment your code and explain what it does and why are you doing things in that way.
+  \end{itemize}
+\end{itemize}
+
+\vspace*{1em}
+
+\textbf{About help}
+\begin{itemize}
+  \item Homework assignments are individual work.
+  While you may discuss the tasks with one-another and give hints or suggest resources, all submissions must be your own work, stem from your own thought process, and be written in your own words.
+  You are not allowed to share answers, even for cross-checking.
+  \item You may not use third party/online tools to solve tasks, but you may use them to check your tasks.
+  \item If you use external resources\footnote{Anything that is not part of lecture or practice slides.} to help you with your homework, e.g. a CSE\footnote{Cryptography Stack Exchange} post or an article, you must properly cite that resource.
+  \item If we catch you using someone else's work, we will report you for plagiarism.
+  If we catch you colluding with a coursemate, we will report both of you for plagiarism.
+  In both cases you will fail the course.
+\end{itemize}
+
+\newpage
+
+\begin{task}{Locksmith}
+  Suppose that you have intercepted the ciphertext \texttt{0xCA0BEC266D6D0C} that was obtained with the one time pad.
+  Find the keys such that the ciphertext would decrypt to the words:
+  \begin{itemize}
+    \item correct
+    \item mistake
+    \item perhaps
+  \end{itemize}
+
+  \textit{(1 point)}
+\end{task}
+
+\begin{task}{An affinity for animals}
+  Given the alphabet
+  \[
+    \mathcal{A} = \{a, b, c, d, e, f, g, h, i, k, l, m, n, o, t, u, w, x, y\},
+  \]
+  the cipher defined as
+  \begin{align*}
+    \Enc_{(a, b)}(x) &= (ax - b) \bmod \lvert\mathcal{A}\rvert,\\
+    \Dec_{(a,b)}(y) &= a^{-1}(y + b) \bmod \lvert\mathcal{A}\rvert,
+  \end{align*}
+  and the plaintext-ciphertext pair $(\mathit{dog},\mathit{hdc})$,
+  find:
+  \begin{enumerate}
+    \item the unicity distance of the particular cipher instance, \textit{(1 point)}
+    \item the animal corresponding to the ciphertext $\mathit{wdf}$. \textit{(2 points)}
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Classic Vigenere}
+  Given the ciphertext
+  \begin{Verbatim}
+LWMVWAHAMEHAGRGOPGXGAVVSJWEZMNSRGFWUPCWWSRQXARTVVQKUZIWVDUW
+SJTQRLWGLIHWCLIFLIWWMJGMRVWGGSMJDERHJXDEUQXAVWSATCLGHCVJWCL
+IJWKMVQGCMWQGJUMYZIKLGGHMXGYXDIALJXSMLDNGGFKMRAWCKIGJJVHWJI
+PIHGECPSJEZILWMBXZSIXVANPKCAKDVPQJTYYAJTLFQLWWWWOWWLSNTASEW
+IPMFYIWLAVTJYLKPGMFYIPELQDCHGFIVIWVDZASFIXVANPKCTWRIYKWNWYZ
+SKMRGLWQRYLDPMVWXAXGSHAYEWIPELFDWRWKWWYDVWIZWGGKSMDSPENWIWL
+AVTIRQLWQRYACKPMVXVKLZTQVAEBQKJSIQSFKIIXMKJVIEHAWCEWCBLAKIW
+VQXXVEFUXIPZAHBSJQPVHZWPTXZJTKSJVHGSMJTIWKMBQRYLWIXFGDVIAFR
+TYVACOCGMGAIDXBQKZLDJNWUIBSJWKMEDACOXGSCGSFWXVJGJBIXAGCIFGM
+IBLWAGZIDAVQSMKQMPAWUATGDXBMUSAIJXAAQELADVWSFSAIPMPTEULXDML
+ATAEKUPAYSDAGEKKDUIUZDWWWLDZINWPTXZWXZQGNXMEFVBCWAUIIWLWHIR
+VJTIHAFVXVWXTZIFUTAYDLXUELWAGWSQXVKLZPBCGMSWRLUPZISTDCXHJXD
+EUQQMGSMHMCGMWIZWFDBLAFVBSZASMMKFDLMXXTZIFLUZSEKPGMFYNWYVGC
+BGSJTIFGMINVWWSWQGXHXIWUWJIUSJAIQGJPENWCWXZACOXGKPGSJLWIXQG
+JLSFLRIVWSQWYLXGMIVGBWJLZTXVWKHJIUSJAIQGJLSFLAQOWLDZISVDZXZ
+SIGSMVDVXUSGMETGJBJJWTLSEGUZIDAVQSFTTKEMKTGSMVDVXTWAQINWXVK
+GVDZXZSIGSMVDVXUSGMETGJBXZWUZIWVDUXGHTIGWSQTCSKHMQTDTJIUSJA
+IQGJZISDPHCSFIQWGUXIPSYDZEHZDJIBMHBFWUPCWWLWQWGJIPELXGMIVGB
+UMYZIVSLZPDIEWPVMFYIWCGMIWHSQSWIKFIUISFIPELLWIXALSWIKFIWVOG
+CBLSNTUISFXVKLGBWVJGLBSQGJWVLGNWYJFTQKZTDZSJLDBLWUGWAVKDNTJ
+ACKMHDTLHAKHQHWFIAMOSHNSDDDEMFYDVQQHWWRWOWWAWJTXVGLTAXAFVPE
+DXLICSUGWWKLWMTDSCMXZGEQRYLDOEAFYCWLSUZEULXWRGXIPIXJTMHGEIP
+ELENKSMFIZCOSHJYKAAGHAKBIRLDXVK
+  \end{Verbatim}
+  encrypted with Vigenere:
+  \begin{enumerate}
+    \item Find the key-length by Kasiski or by the IC method. \textit{(2 points)}
+    \item Find the key. \textit{(2 points)}
+    \item Decrypt the message. \textit{(1 point)}
+  \end{enumerate}
+
+  You are allowed to use third party and online tools to help you confirm your solutions, but not to simply solve the task.
+  You must show your reasoning for each step, and reference any online tool you have used for checking, if any.
+  If you write a program, you can write your reasoning as code comments.
+\end{task}
+
+\begin{task}{PRFs}
+  Let $F_k: \{0,1\}^\lambda \to \{0,1\}^\lambda$ be a secure PRF.
+  Are the following functions PRFs?
+  If not, provide a distinguisher.
+  If yes, attempt to explain why you think so (no need for a formal proof).
+
+  \begin{enumerate}
+    \item $F'_k(x \vert\vert x') = F_k(0\vert\vert x) \oplus F_k(x'\vert\vert 1)$, where $x$ and $x'$ are each $\lambda - 1$ bits long. \textit{(1 point)}
+    \item $F'_k(x \vert\vert x') = F_k(x \oplus 0^\lambda) \oplus F_k(x' \oplus 1^\lambda)$, where $x$ and $x'$ are each $\lambda$ bits long. \textit{(1 point)}
+    \item $F'_k(x \vert\vert x') = F_k(x) \oplus x'$, where $x$ and $x'$ are each $\lambda$ bits long. \textit{(1 point)}
+  \end{enumerate}
+\end{task}
+
+\begin{task}{A malleable stream}
+  You have have intercepted a message encrypted with a (synchronous) stream cipher that Alice has sent Bob.
+  You suspect that the message is about Bob asking Alice out, and that Alice has said \enquote{yes}.
+  However, you think that Alice's poor choice of cryptography (namely using an unauthenticated cipher) makes her a poor fit for Bob.
+  Thus, you want to modify the message such that Bob decrypts it to \enquote{no!}.
+
+  The ciphertext you intercepted is \texttt{0x3FC6A9}.
+  What ciphertext would you send Bob such that he would decrypt it to \enquote{no!}?
+  Assume that the plaintext encoding is ASCII. \textit{(3 points)}
+\end{task}
+
+\newpage
+
+\begin{task}{CBC-CTR (bonus)}
+  The (in)famous cryptographer Dr. Cry has devised a new block cipher mode of operation called CBC-CTR.
+  In CBC-CTR, the IV is picked at random for the first message sent, just like for regular CBC.
+  However, for every subsequent message sent (entire message, not message block) the initial IV is incremented by one.
+
+  That is, the first message is encrypted with the IV $iv$, the second one with the IV $iv + 1$, etc\dots.
+
+  Show that this scheme does not have IND-CPA. \textit{(2 points)}
+\end{task}
+\end{document}
