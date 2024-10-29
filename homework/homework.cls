@@ -3,22 +3,11 @@
 
 \LoadClass[parskip=half]{scrartcl}
 
-\iffalse
-\RequirePackage[
-  a4paper,
-  top=25mm,
-  bottom=25mm,
-  left=30mm,
-  right=30mm,
-  footskip=10mm
-]{geometry}
-\fi
-
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage{amsthm}
 
-\usepackage{crysymb}
+\RequirePackage{crysymb}
 
 \RequirePackage[hidelinks]{hyperref}
 
@@ -29,7 +18,6 @@
 \RequirePackage{microtype}
 
 \setmainfont{Stix Two Text}
-%\setsansfont[BoldFont = *-Semibold]{Source Sans 3}
 \setmathfont{Stix Two Math}
 \setmonofont{Courier New}
 
@@ -46,7 +34,7 @@
 \def\@maketitle{%
   \newpage
   \begin{center}%
-    {Homework~\@title{} --- Deadline:~\@date~23:59~EEST\par}%
+    {Homework~\@title{} --- Deadline:~\@date~23:59~EET\par}%
   \end{center}%
   \par}
 \makeatother
