@@ -1,0 +1,93 @@
+\documentclass{practice}
+
+\begin{document}
+\begin{center}
+  \textbf{Practice 2, task 9 solution}
+\end{center}
+
+Compute the unicity distance of the following ciphers:
+\begin{itemize}
+  \item Caesar's cipher
+  \item Affine cipher
+  \item Vigenere cipher (in terms of key-length $n$)
+\end{itemize}
+
+\vspace*{1em}
+
+\textbf{Unicity distance}
+
+Recall that the unicity distance describes the amount of ciphertext needed to be confident that we have recovered the correct plaintext.
+Indeed, for a short message, it is possible that multiple keys give a meaningful plaintext, and we are faced with the same problem as with the one-time pad: which message is correct?
+Thus, if the ciphertext is longer than the unicity distance, there should be just one decryption which is meaningful.
+
+\textbf{Note.}
+The unicity distance is only a theoretical minimum, and in general we might need much more characters to reliably break a cipher!
+
+More formally, the unicity distance helps us reduce the number of \emph{spurious keys}, i.e. keys that do not give us the correct plaintext, assuming that the plaintext has redundancy.
+The unicity distance $N_0$ is computed with the formula
+\[
+  N_0 = \frac{H(K)}{D},\qquad
+  H(K) = \log_2{\lvert K \rvert}
+\]
+where $H(K)$ is the entropy of the key space $K$, and $D$ is the plaintext redundancy in bits per character.
+Recall that $\lvert K\rvert$ denote the cardinality of the key space, i.e. the number of possible keys.
+
+Each character in English can convey $\log_2(26) \approx 4.7$ bits of information.
+However, meaningful English texts contain only about $1.5$ bits of information per character.
+Thus, the English plaintext redundancy is $D_\mathit{English} = 4.7 - 1.5 = 3.2$.
+
+\textbf{Affine cipher}
+
+To compute the unicity distance we need to find the number of possible keys for the (English) Affine cipher.
+
+\begin{itemize}
+  \item For $b$ the answer is straightforward.
+  We are working modulo $26$, so all values $0, \dots, 25$ work for $b$.
+  \item For $a$ the answer is slightly more complex.
+  Recall that for decryption to work, $a$ must be picked such that $\gcd(a, 26) = 1$.
+  We can either find the number of such integers by hand since the values are small, or we can use Euler's totient function.
+
+  Indeed, Euler's \emph{totient} function $\varphi(n)$ counts the positive integers up to a given integer $n$ that are relatively prime (coprime) to $n$.
+  Sometimes it is also called Euler's \emph{phi} function since it is written using the Greek letter phi.
+  One way to compute $\varphi(n)$ is with the \emph{prime factorisation}\footnotemark{} of $n$.
+  \footnotetext{Any number can be expressed as the product of distinct primes, e.g. $360 = 2^3 \cdot 3^2 \cdot 5$.
+  It is not an easy problem to find the prime factorisation.
+  In fact, the security of many cryptographic algorithms (e.g. RSA) relies on the difficulty of prime factorisation for large numbers.}%
+  Euler's totient function is then computed as
+  \[
+    \varphi(n) = p_1^{k_1 - 1}(p_1 - 1) p_2^{k_2 - 1}(p_2 - 1) \dots p_r^{k_r - 1}(p_r - 1)
+  \]
+  where $n = p_1^{k_1}p_2^{k_2}\dots p_r^{k_r}$ is the prime factorisation of $n$.
+
+  We then have
+  \[
+    \varphi(26) = \varphi(2 \cdot 13) = \varphi(2) \cdot \varphi(13) = (2-1) \cdot (13 - 1) = 12
+  \]
+  and so there are $12$ possible values which $a$ can take.
+  If you were to find the possible values by hand, $a$ can be anything that is not divisible by $2$ or $13$.
+  Therefore,
+  \[
+    a\in\{1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25\}
+  \]
+  which is indeed $12$ possibilities.
+\end{itemize}
+
+The total number of possible keys is thus $12 \cdot 26 = 312$ since there are $12$ ways to pick $a$, $26$ ways to pick $b$, and the pics are independent.
+Therefore $N_0 = \frac{\log_2(312)}{3.2} \approx 2.59$.
+Since we are talking about the length of a ciphertext, we have to round up since we cannot have partial character lengths.
+The unicity distance of the Affine cipher is thus $3$.
+
+\vspace*{1em}
+
+\textbf{Vigenere cipher}
+
+For the Vigenere cipher, the size of the key space varies and so the unicity distance is different per key length.
+When using Vigenere with the English alphabet, the size of the key space is thus $26^n$, where $n$ denotes the length of the key.
+Indeed, for each letter of the key we have $26$ options, and we can reuse the same letter at multiple positions.
+
+We then have
+\[
+  N_0 = \frac{\log_2\bigl(26^n\bigr)}{3.2} = \frac{n\log_2(26)}{3.2} \approx 1.47n.
+\]
+
+\end{document}
