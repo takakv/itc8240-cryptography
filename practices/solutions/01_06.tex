@@ -1,0 +1,264 @@
+\documentclass{practice}
+
+\usepackage{cases}
+
+\begin{document}
+
+\begin{center}
+  \textbf{Practice 1, task 6 solution}
+\end{center}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{@{}cccccccccccccc@{}}
+    A  & B  & C  & D  & E  & F  & G  & H  & I  & J  & K  & L  & M & \dots\\\midrule
+    0  & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & 11 & 12 & \dots\\\\
+    \dots & N  & O  & P  & Q  & R  & S  & T  & U  & V  & W  & X  & Y  & Z\\\midrule
+    \dots & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25
+  \end{tabular}
+  \caption{Letter positions of the English alphabet (0-indexed).}
+  \label{table:alphabet}
+\end{table}
+
+To conduct a KPA against the affine cipher, we must think about the plaintext and ciphertext in mathematical terms.
+As such, let us first convert the plaintext and ciphertext into their numeric forms by replacing each letter with the letter's index in the alphabet.
+The index-letter mapping for the English alphabet is given in \autoref{table:alphabet}.
+
+\begin{figure}[h!]
+  \centering
+  \begin{tabular}{@{}C{1em}C{1em}C{1em}C{1em}C{1em}C{1em}@{}}
+    c & i & p & h & e & r\\\midrule
+    2 & 8 & 15 & 7 & 4 & 17
+  \end{tabular}
+  \hspace*{1cm}
+  \begin{tabular}{@{}C{1em}C{1em}C{1em}C{1em}C{1em}C{1em}@{}}
+    s & w & f & r & c & p\\\midrule
+    18 & 22 & 5 & 17 & 2 & 15
+  \end{tabular}
+\end{figure}
+
+Each ciphertext letter $y_i$ is obtained by applying the encryption function to the corresponding plaintext letter $x_i$, where the subscript $i$ indicates the position of the letter in the string.
+For example, in the known plaintext-ciphertext pair:
+\begin{itemize}
+  \item $x_1 = 2$, $y_1 = 18$ represent the first letter of the plaintext and of the ciphertext,
+  \item $x_6 = 17$, $y_6 = 15$ represent the last letter of the plaintext and of the ciphertext.
+\end{itemize}
+
+\begin{tcolorbox}
+  Notice that I start indexing from 1 instead of 0.
+  While I could have started indexing from 0, I find indexing from 1 to be more natural when talking about positions.
+  The reason why we index the alphabet's letters from 0 is because we are working mod 26, and so starting from 0 is important for the calculations!
+\end{tcolorbox}
+
+By rewriting the encryption formula with the index notation, we get
+\[
+  y_i = \Enc_{(a,b)}(x_i) = (ax_i + b) \bmod{26}.
+\]
+For some concrete values, e.g. $x_1 = 2, y_1 = 18$, this means
+\[
+  18 = \Enc_{(a,b)}(2) = (2a + b) \bmod{26},
+\]
+where the tuple $(a, b)$ is the key which is unknown to us.
+We say that $a,b$ are two unknowns.
+
+You might recall that a system of $n$ linear equations\footnotemark{} with $n$ unknowns generally has a single solution if the equations are linearly independent from one another.
+\footnotetext{\url{https://en.wikipedia.org/wiki/System_of_linear_equations}}%
+Thus, if we can get two suitable plaintext-ciphertext letter combinations, we should be able to recover the two unknowns that make up the key.
+Since the known pair is made of 6 letters, we should have enough material to work with.
+
+\iffalse
+You might notice that the affine function used for encryption can be graphed as a line (if we disregard the modulus).
+You might then recall that two non-parallel lines will always intersect in exactly one point.
+This hopefully provides some intuition to the fact that a system of two linear equations with two unknowns has a unique solution, provided that the equations are not multiples of one another.
+\fi
+
+Let us pick the pairs $(x_1, y_1) = (2, 18)$, $(x_6, y_6) = (17, 15)$ to try and solve the system.
+We have
+\begin{numcases}{}
+  2a + b \equiv 18 \pmod{26}\label{eq:c11}\\
+  17a + b \equiv 15 \pmod{26}\label{eq:c62}
+\end{numcases}
+If the \enquote{$\equiv$} notation seems strange to you, see the \nameref{sec:addendum}.
+
+We cannot solve for two variables at once, so let us subtract \eqref{eq:c11} from \eqref{eq:c62} to cancel out the $b$:
+\begin{alignat}{3}
+  &&\quad
+  (17a + b) - (2a + b) &\equiv 15 - 18 &&\pmod{26}\\
+  \Leftrightarrow&&
+  15a &\equiv -3 &&\pmod{26}\\
+  \Leftrightarrow&&
+  15a &\equiv 23 &&\pmod{26}\label{eq:invert-fifteen}
+\end{alignat}
+Substitution could work as well, but subtraction is less confusing here.
+
+Since ordinary division is not defined in modular arithmetic, we must find the \emph{modular multiplicative inverse} (henceforth simply \enquote{inverse}) of $15$ modulo $26$.
+For this we can use the \emph{extended Euclidean algorithm} (EEA).
+
+First, we use the Euclidean algorithm (EA) to compute the greatest common divisor (GCD) of $15$ and $26$ and check whether $\gcd(15, 26)=1$.
+If not, $15$ does not have an inverse modulo $26$.
+If yes, we \enquote{backtrack} the algorithm by substituting the remainders to recover the \emph{Bézout coefficients} and thereby determine the inverse.
+The Bézout coefficients $s, t$ are integers such that $\gcd(a,b) = sa + tb$.
+
+Typically the EEA refers to the more efficient version of the algorithm\footnotemark{} which computes the coefficients and the GCD in parallel.
+You can study it to speed up your calculations, but we will not cover it here.
+\footnotetext{\url{https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm}}%
+
+\begin{tcolorbox}[title=Modular multiplicative inverse]
+  The modular multiplicative inverse $x$ of an integer $a$ with respect to the modulus $m$ is an integer $x$ which satisfies
+  \[
+    ax \equiv 1 \pmod{m}.
+  \]
+  We often write the modular multiplicative inverse of $a$ as $a^{-1}$.
+  Note that $-a$ is the \emph{additive inverse} of $a$.
+  \tcblower
+  For linguistic simplicity, I will use \enquote{inverse} when referring to the multiplicative inverse $a^{-1}$ (we use it more), and \enquote{additive inverse} when talking about $-a$.
+\end{tcolorbox}
+
+Computing the GCD with the Euclidean algorithm gives us:
+\begin{alignat*}{3}
+  26 &= 1 &&\cdot {\color{purple}15} &&+ {\color{blue}11}\\
+  {\color{purple}15} &= 1 &&\cdot {\color{blue}11} &&+ {\color{teal}4}\\
+  {\color{blue}11} &= 2 &&\cdot {\color{teal}4}  &&+ {\color{violet}3}\\
+  {\color{teal}4}  &= 1 &&\cdot {\color{violet}3}  &&+ {\color{orange}1}\\
+  {\color{violet}3}  &= 3 &&\cdot {\color{orange}1}  &&+ 0
+\end{alignat*}
+and the GCD is the last nonzero remainder, i.e. $\color{orange}1$.
+We have $\gcd(15, 26)=1$ and so $15$ has an inverse which we will find by reversing the process.
+
+This requires us to move upwards from the line that gave us the GCD, and isolate the terms to the right of the $+$ signs.
+Rearranging the equations gives us:
+\begin{alignat*}{3}
+  {\color{orange}1} &= 4  &&- 1 &&\cdot 3\\
+  {\color{violet}3} &= 11 &&- 2 &&\cdot 4\\
+  {\color{teal}4}   &= 15 &&- 1 &&\cdot 11\\
+  {\color{blue}11}  &= 26 &&- 1 &&\cdot 15
+\end{alignat*}
+Then, starting with the lowest number, we substitute all numbers that are not $15, 26$ or their coefficients.
+Recall that the goal is to get the GCD in terms of coefficients of $15$ and $26$, i.e. to recover the Bézout coefficients.
+We have
+\begin{align}
+  \gcd(15, 26) &= {\color{orange}1}
+  = {\color{orange}4 - 1 \cdot 3}\\
+  &= 4 - {\color{violet}3}
+  = 4 - {\color{violet}(11 - 2 \cdot 4)}\label{eq:subthree}\\
+  &= -11 + 3 \cdot {\color{teal}4}
+  = -11 + 3 \cdot {\color{teal}(15 - 11)}\label{eq:plusthree}\\
+  &= 3 \cdot 15 - 4 \cdot {\color{blue}11}
+  = 3 \cdot 15 - 4 \cdot {\color{blue}(26 - 15)}\label{eq:minusfour}\\
+  &= -4 \cdot 26 + 7 \cdot 15
+\end{align}
+and from
+\[
+  \gcd(15, 26) = 7 \cdot 15 - 4 \cdot 26
+\]
+we see that $7$ is the inverse of $15$ modulo $26$.
+
+\begin{tcolorbox}[title=Tip]
+  When reversing the EA, be careful to substitute only one remainder at a time and keep track of the \enquote{consumed} substitutions.
+  For example, the $3$ in \eqref{eq:plusthree} or $-4$ in \eqref{eq:minusfour} are coefficients and you should not substitute them!
+  $3$ was already substituted in \eqref{eq:subthree}, and $4$ in \eqref{eq:plusthree}.
+  On paper, I like to write down which substitution I have already consumed.
+\end{tcolorbox}
+
+Now that we know the modular multiplicative inverse of $15$ which we write as $15^{-1}$, we can continue solving \eqref{eq:invert-fifteen}.
+We have:
+\begin{alignat*}{3}
+  &&\quad
+  15a \cdot 15^{-1} &\equiv 23 \cdot 15^{-1} &&\pmod{26}\\
+  \Leftrightarrow&&
+  a &\equiv 23 \cdot 7 &&\pmod{26}\\
+  \Leftrightarrow&&
+  a &\equiv 161 &&\pmod{26}\\
+  \Leftrightarrow&&
+  a &\equiv 5 &&\pmod{26}
+\end{alignat*}
+
+Now that we know $a$, we can substitute it in \eqref{eq:c11}, and so
+\begin{alignat*}{3}
+  &&\quad
+  2 \cdot 5 + b &\equiv 18 &&\pmod{26}\\
+  \Leftrightarrow&&
+  b &\equiv 18 - 10 &&\pmod{26}\\
+  \Leftrightarrow&&
+  b &\equiv 8 &&\pmod{26}
+\end{alignat*}
+
+We have now recovered the key $a = 5, b = 8$, and can decrypt each ciphertext letter $y_i$ with
+\[
+  x_i = \Dec_{(5,8)}(y_i) = 5^{-1}(y_i - 8) \bmod{26}
+  = 21(y_i - 8) \bmod{26}.
+\]
+
+Indeed, we have that
+\[
+  26 = 5 \cdot 5 + 1
+\]
+and so
+\[
+  \gcd(5, 26) = 1 = 26 - 5 \cdot 5
+\]
+and the inverse of $5$ is $-5 \bmod{26} = 21$.
+
+We can then decrypt the challenge ciphertext:
+\begin{alignat*}{3}
+  x_1 &= 21(13 &&- 8) \bmod 26 = 105  &&\bmod 26 = 1\\
+  x_2 &= 21(15 &&- 8) \bmod 26 = 147  &&\bmod 26 = 17\\
+  x_3 &= 21(0  &&- 8)  \bmod 26 = -168 &&\bmod 26 = 14\\
+  x_4 &= 21(6  &&- 8)  \bmod 26 = -42  &&\bmod 26 = 10\\
+  x_5 &= 21(2  &&- 8)  \bmod 26 = -126 &&\bmod 26 = 4\\
+  x_6 &= 21(21 &&- 8) \bmod 26 = 273  &&\bmod 26 = 13
+\end{alignat*}
+and we recover the word \enquote{broken}.
+
+\begin{figure}[h!]
+  \centering
+  \begin{tabular}{@{}C{1em}C{1em}C{1em}C{1em}C{1em}C{1em}@{}}
+    n & p & a & g & c & v\\\midrule
+    13 & 15 & 0 & 6 & 2 & 21
+  \end{tabular}
+  \hspace*{1cm}
+  \begin{tabular}{@{}C{1em}C{1em}C{1em}C{1em}C{1em}C{1em}@{}}
+    b & r & o & k & e & n\\\midrule
+    1 & 17 & 14 & 10 & 4 & 13
+  \end{tabular}
+\end{figure}
+
+Note that there are easier/quicker pairs with which to solve the exercise, e.g. (c, s) and (e, c), but the chosen approach illustrates the general method.
+
+\section*{Addendum}\label{sec:addendum}
+
+Let $\ZZ$ be the set of integers, i.e. $\ZZ = \{\dots, -2, -1, 0, 1, 2, \dots\}$, and let $a, b, m \in \ZZ$.
+
+The notation
+\[
+  a \equiv b \pmod{m}
+\]
+denotes that $a,b$ are \emph{congruent} modulo $m$.
+The symbol $\equiv$ is the \emph{equivalence} symbol.
+The congruence relation can be written with a normal equality as
+\[
+  a - b = km
+\]
+for some $k\in\ZZ$.
+From this we conclude that $a,b$ are congruent modulo $m$ when $m$ divides $a - b$, which is written as $m\mid(a-b)$.
+Indeed,
+\[
+  a - b = km \qquad\iff\qquad
+  (a-b)/m = k
+\]
+and since we fixed $k$ to be an integer, $m$ has to perfectly divide $a-b$.
+What the precise value of $k$ is is not important in a congruence relation.
+
+The notation
+\[
+  a \bmod m = b
+\]
+is not well liked by mathematicians but is frequent in computer science since it illustrates how we call the modulo operations in code, e.g. \texttt{int b = a \% b} with \texttt{\%} being the modulo operator in many languages.
+Note that
+\[
+  a \equiv b \pmod{m} \qquad\iff\qquad
+  a \bmod{m} = b
+\]
+assuming that $b \le a$.
+
+\end{document}
