@@ -1,0 +1,168 @@
+\documentclass{practice}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=20cm,compat=1.18}
+\usepgfplotslibrary{external,fillbetween}
+
+\usepackage[dvipsnames,hyperref]{xcolor}
+
+\begin{document}
+\begin{center}
+  \textbf{Practice 8, solutions}
+\end{center}
+
+\begin{task}{The textbook is a lie}
+  IND-CCA stands for \emph{INDistinguishability under a Chosen Ciphertext Attack}.
+  In the IND-CCA game, the adversary gains access to a decryption oracle in addition to the encryption oracle.
+  Note that in a public key scheme, the encryption oracle is not needed.
+
+  The IND-CCA game is usually further split into:
+  \begin{itemize}
+    \item IND-CCA1: indistinguishable under \emph{non-adaptive} CCA.
+    
+    The adversary can query the decryption oracle only before receiving the challenge ciphertext.
+
+    \item IND-CCA2: indistinguishable under \emph{adaptive} CCA.
+    
+    The adversary can query the decryption oracle also after receiving the challenge ciphertext, under the condition that it does not submit the challenge ciphertext to the oracle.
+    IND-CCA2 is therefore called adaptive since the adversary can customise its requests to the oracle depending on the specific challenge ciphertext.
+  \end{itemize}
+
+  \autoref{fig:indcca} depicts a simplified IND-CCA2 security game, where
+  \begin{itemize}
+    \item the cryptosystem is a public key cryptosystem,
+    \item the challenger also acts as the decryption oracle,
+    \item the challenger makes no decryption queries before receiving the challenge.
+  \end{itemize}
+
+  \begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[
+      Squiggly/.style={
+        decorate,
+        decoration={snake, segment length=4, amplitude=0.9},
+      },
+      ]
+      \draw[rounded corners,thick,fill=blue!50] (0, 0) rectangle ++(4,-7.65);
+      \draw[rounded corners,thick,fill=red!85] (6, 0) rectangle ++(1,-7.65);
+
+      \draw[rounded corners,thick,fill=red!85] (7.5, 0) rectangle ++(1,-7.65);
+      \draw[rounded corners,thick,fill=blue!50] (10.5, 0) rectangle ++(4,-7.65);
+    
+      \node (P) at (2, 0.5) {$\text{Challenger } \GAME_0$};
+      \node (K) at (6.5, 0.5) {$\AD$};
+
+      \node (K) at (8, 0.5) {$\AD$};
+      \node (P) at (12.5, 0.5) {$\text{Challenger } \GAME_1$};
+
+      \node at (2, -1) {$\pk, \sk \gets \GEN(\cdot)$};
+      \node at (2, -2.365) {$c^* \gets \Enc_{\pk}(m_0)$};
+      \node at (2, -5) {Decrypt $c_i$ if $c^* \neq c_i$.};
+
+      \node at (12.5, -1) {$\pk, \sk \gets \GEN(\cdot)$};
+      \node at (12.5, -2.365) {$c^* \gets \Enc_{\pk}(m_1)$};
+      \node at (12.5, -5) {Decrypt $c_i$ if $c^* \neq c_i$.};
+      
+      \draw[->,thick] (4, -1) -- (6, -1) node[midway,above] {$\pk$};
+      \draw[<-,thick] (4, -2) -- (6, -2) node[midway,above] {$m_0, m_1$};
+      \draw[->,thick] (4, -2.75) -- (6, -2.75) node[midway,above] {$c^*$};
+      \draw[<-,thick] (4, -3.75) -- (6, -3.75) node[midway,above] {$c_1$};
+      \draw[->,thick] (4, -4.5) -- (6, -4.5) node[midway,above] {$\Dec_{\sk}(c_2)$};
+      \node at (5, -5) {$\vdots$};
+      \draw[<-,thick] (4, -5.85) -- (6, -5.85) node[midway,above] {$c_n$};
+      \draw[->,thick] (4, -6.65) -- (6, -6.65) node[midway,above] {$\Dec_{\sk}(c_n)$};
+
+      \draw[<-,thick] (8.5, -1) -- (10.5, -1) node[midway,above] {$\pk$};
+      \draw[->,thick] (8.5, -2) -- (10.5, -2) node[midway,above] {$m_0, m_1$};
+      \draw[<-,thick] (8.5, -2.75) -- (10.5, -2.75) node[midway,above] {$c^*$};
+      \draw[->,thick] (8.5, -3.75) -- (10.5, -3.75) node[midway,above] {$c_1$};
+      \draw[<-,thick] (8.5, -4.5) -- (10.5, -4.5) node[midway,above] {$\Dec_{\sk}(c_2)$};
+      \node at (9.5, -5) {$\vdots$};
+      \draw[->,thick] (8.5, -5.85) -- (10.5, -5.85) node[midway,above] {$c_n$};
+      \draw[<-,thick] (8.5, -6.65) -- (10.5, -6.65) node[midway,above] {$\Dec_{\sk}(c_n)$};
+    
+      \draw[->,thick] (6.5,-7.65) decorate[Squiggly]{ -- (6.5, -8.01) };
+      \draw[->,thick] (8,-7.65) decorate[Squiggly]{ -- (8, -8.01) };
+    
+      \node at (6.5, -8.31) {$b$};
+      \node at (8, -8.31) {$b$};
+    \end{tikzpicture}
+    \caption{Simplified IND-CCA2 security game.}
+    \label{fig:indcca}
+  \end{figure}
+
+  The adversary $\AD$ wins the game if it determines correctly whether it is interacting with challenger $\GAME_0$ or challenger $\GAME_1$.
+  That is, if the adversary thinks that $c^*$ represents the encryption of $m_0$, it should return $0$.
+  If the adversary thinks that $c^*$ represents the encryption of $m_1$, it should return $1$.
+
+  \begin{tcolorbox}[title=Note]
+    If the game based approach/challengers and distinguishers confuse you, I implore you to stay after class and ask questions.
+  \end{tcolorbox}
+
+  In the single query IND-CCA2 game, we can only ask the challenger for a single decryption after we have received the challenge ciphertext $c^*$, and we know that we cannot ask the challenger to decrypt $c^*$.
+  However, notice that textbook RSA is malleable.
+
+  Let $e$ be the public exponent, let $n$ be the RSA modulus, and let $a, b$ be two messages.
+  We have that
+  \begin{align*}
+    \Enc_e(ab) = (ab)^e\bmod{n} &= \bigl(a^e\cdot b^e\bigr)\bmod{n}\\
+    &= \Bigl[\bigl(a^e\bmod{n}\bigr)\bigl(b^e \bmod{n}\bigr)\Bigr]\bmod{n}\\
+    &= \bigl[\Enc_e(a) \cdot \Enc_e(b)\bigr]\bmod{n}.
+  \end{align*}
+
+  Let $c^*$ be the encryption of either $m_0$ or $m_1$, and let $s \neq \sqrt{1}$ in $\ZZ_n$.
+  The adversary can compute $r \gets s^e \bmod{n}$ since it knows the public key $\pk=(e, n)$, and compute $c \gets rc^* \bmod{n}$.
+  By submitting $c$ to the challenger/decryption oracle, the adversary receives back the decryption $sm_b$ which is either $sm_0$ or $sm_1$.
+  Because the adversary knows $s, m_0, m_1$ (it picked them all), it can compute $sm_0, sm_1$ and compare it with $sm_b$ to determine whether $b=0$ or $b=1$.
+  The adversary can thus always win the IND-CCA2 game for textbook RSA.
+\end{task}
+
+\begin{task}{In search of unity}
+  First, notice that $21 = 3 \cdot 7$ and $3, 7$ are two primes.
+  From the theorem on slide 8 we thus know that $1 \in \ZZ_{21}$ has exactly 4 (distinct) square roots.
+
+  Because $3, 7$ are primes, it must be that $\gcd(3, 7)=1$ and since $1 = 5 \cdot 3 + (-2) \cdot 7$, and so $\alpha = 5, \beta = -2$ are the Bézout coefficients for $3$ and $7$ respectively.
+  Since $\ZZ_{21} \cong \ZZ_3 \times \ZZ_7$, we first solve the equations
+  \begin{align*}
+    u^2 &\equiv 1 \pmod{3}\\
+    v^2 &\equiv 1 \pmod{7}
+  \end{align*}
+  for which the solutions are $u \in \{1, 2\}$ and $v \in \{1, 6\}$ since $-1 \equiv n - 1 \bmod{n}$.
+  The solutions of $(u, v)^2 = (1, 1)$ in $\ZZ_3 \times \ZZ_7$ are thus the pairs $(1, 1), (1, 6), (2, 1), (2, 6)$.
+
+  To find the solutions in $\ZZ_{21}$, we must map the solutions back to $\ZZ_{21}$ using the map
+  \[
+    g:
+    \ZZ_3 \times \ZZ_{5} \to \ZZ_{21}\,;\,
+    (u, v) \to 7\beta u + 3\alpha v
+  \]
+  or more simply, $g(u, v) = (15v - 14u) \bmod{21}$.
+  We have
+  \begin{align*}
+    g(1, 1) &= 1\\
+    g(2, 1) &= (15 - 14 \cdot 2) \bmod{15} = 8\\
+    g(1, 6) &= (15 \cdot 6 - 14) \bmod{15} = 13\\
+    g(2, 6) &= (15 \cdot 6 - 14 \cdot 2) \bmod{15} = 20
+  \end{align*}
+  and the square roots of $1$ in $\ZZ_{21}$ are $1, 8, 13, 20$.
+
+  \begin{tcolorbox}[title=NB!]
+    The map is
+    \newlength{\saveddisplayskip}
+    \setlength{\saveddisplayskip}{\belowdisplayskip}
+    \setlength{\abovedisplayskip}{0pt}
+    \setlength{\belowdisplayskip}{0pt}
+    \begin{align*}
+      g(u, v) &= q\beta u + p\alpha v
+    \intertext{and not}
+      g(u, v) &= p\alpha u + q\beta v
+    \end{align*}
+    for primes $p, q$.
+    
+    \vspace*{\saveddisplayskip}
+    That is, $u, v$ are paired with the prime that was \emph{not} used to find the square roots in separate fields.
+    It is easy to accidentally use the latter function, so beware!
+  \end{tcolorbox}
+\end{task}
+
+\end{document}

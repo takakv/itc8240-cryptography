@@ -1,0 +1,134 @@
+\documentclass{practice}
+
+\usepackage{amsthm}
+\usepackage{crysymb}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,decorations.pathmorphing,shapes,positioning,patterns,shadows.blur}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newcommand*{\algorithmautorefname}{Algorithm}
+\renewcommand{\algorithmiccomment}[1]{\hfill$\smalltriangleright$\textit{#1}}
+
+\title{8}
+\subtitle{RSA cryptosystem}
+\date{\DTMdate{2024-10-30}}
+
+\begin{document}
+\maketitle
+
+\begin{task}{Pen and paper}
+  Given primes $p = 5$, $q = 11$, and the public exponent $e = 3$, find the private exponent $d$.
+
+  Then, encrypt $m = 6$, and decrypt the obtained ciphertext.
+  Finally, decrypt $c = 9$.
+\end{task}
+
+\begin{task}{Picky parameter}
+  If $p = 7$ and $q = 11$, can you still use $e = 3$ as a public exponent?
+  If not, what is the smallest exponent you can use?
+\end{task}
+
+\begin{task}{The cost of speed}
+  Suppose that $p, q$ are 3072-bit primes, and $e = 3$ is the RSA public exponent.
+  A small public exponent helps speed up encryption.
+
+  Encrypt $m = 5$.
+  Is confidentiality maintained against a computational adversary who cannot factor $pq$?
+
+  \begin{tcolorbox}[title={$e=65537$}]
+    $e = 65537 = 2^{2^4} + 1$ is commonly used as the public exponent for RSA, even in modern implementations where the message is properly padded.
+  \end{tcolorbox}
+\end{task}
+
+\begin{task}{IND-CPA? Never heard of her\dots}
+  Win the single query IND-CPA game against textbook RSA.
+\end{task}
+
+\begin{task}{The textbook is a lie}
+  Win the single query IND-CCA2 game against textbook RSA.
+
+  Hint: textbook RSA is malleable.
+\end{task}
+
+\begin{tcolorbox}[title=RSA-OAEP]
+  In practice, RSA encryption should be used with the Optimal Asymmetric Encryption Padding (OAEP) padding scheme.
+  OAEP makes RSA encryption nondeterministic and prevents various attacks, some of which you will see next week.
+\end{tcolorbox}
+
+\newpage
+
+\begin{task}{In search of unity}
+  How many square roots of unity are there in $\ZZ_{21}$?
+  Find them.
+\end{task}
+
+\begin{task}{Miller-Rabin}
+  The Miller-Rabin primality test is given in \autoref{alg:mr}.
+
+  \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+  \renewcommand{\algorithmicensure}{\textbf{Output:}}
+  \begin{algorithm}
+    \caption{Single round Miller-Rabin test}\label{alg:mr}
+  \begin{algorithmic}[1]
+    \Require $n > 2$, an odd integer to be tested for primality.
+    \Ensure $0$ if $n$ is found to be composite, $1$ otherwise.
+    \State $a \getsu \{2, \dots, n - 2\}$
+    \Comment {$a$ is called a \emph{witness} if it helps show that $n$ is composite.}
+    \If{$\gcd(a,n)\neq1$} 
+      \Return{$0$}
+    \EndIf
+    \State Find $k, m$ such that $(n-1)=2^k \cdot m$ for an odd $m$ 
+    \If{$a^m \bmod n =1 $}
+      \Return{$1$}
+    \EndIf
+    \If{$a^{m\cdot2^{i}} \bmod n = n - 1$ for an $i = 1, \dots, k-1$}
+      \Return{$1$}
+    \EndIf
+    \State \Return{$0$}
+  \end{algorithmic}
+  \end{algorithm}
+
+  Note that if the algorithm outputs $1$, it means that the number might be prime (probably prime), not that it is prime.
+  If the algorithm outputs $0$, the number is certainly composite.
+  In practice, the algorithm must be repeated multiple times, with the number of rounds depending on the required security level.
+
+  % https://oeis.org/A020233
+  Use the Miller-Rabin test to verify whether $25$ is prime with potential witnesses $7, 6$.
+  Then, verify whether $19$ is prime with potential witnesses $4, 5$.
+\end{task}
+
+\newpage
+
+\begin{center}
+  Concept refresher
+\end{center}
+
+\begin{tcolorbox}[title=Euler's totient (phi) function]
+  Euler's \emph{totient} function $\varphi(n)$ counts the positive integers up to a given integer $n$ that are coprime to $n$.
+  One way to compute $\varphi(n)$ is with the prime factorisation of $n$.
+  Euler's totient function is then computed as
+  \[
+    \varphi(n) = p_1^{k_1 - 1}(p_1 - 1) p_2^{k_2 - 1}(p_2 - 1) \dots p_r^{k_r - 1}(p_r - 1)
+  \]
+  where $n = p_1^{k_1}p_2^{k_2}\dots p_r^{k_r}$ is the prime factorisation of $n$.
+
+  Note that:
+  \begin{itemize}
+    \item If $\gcd(m, n) = 1, \varphi(m\cdot n) = \varphi(m)\cdot\varphi(n)$
+    \item For a prime $p$, $\varphi\bigl(p^k\bigr) = p^{k-1}(p-1)$
+  \end{itemize}
+  \tcblower
+  If $n$ is the product of $i$ distinct primes, $\varphi(n) = (p_1 - 1)(p_2 - 1)\cdots(p_i - 1)$.
+\end{tcolorbox}
+
+Given large enough numbers with no small factors, integer factorisation is an intractable problem for limited, classical adversaries.
+It follows that computing $\varphi$ is also intractable under the same circumstances.
+When the integer factorisation of $n$ is known, $\varphi(n)$ is easily computed, making it suitable for a cryptographic trapdoor function where the factorisation is the trapdoor.
+
+Integer factorisation is not intractable for quantum adversaries due to Shor's algorithm.
+As such, RSA is not suitable for post-quantum cryptography.
+Integer factorisation is not intractable for unlimited adversaries who can simply brute force the solution.
+
+\end{document}
