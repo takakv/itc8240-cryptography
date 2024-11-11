@@ -20,11 +20,11 @@
   \begin{itemize}
     \item IND-CCA1: indistinguishable under \emph{non-adaptive} CCA.
     
-    The adversary can query the decryption oracle only before receiving the challenge ciphertext.
+    The adversary can query the encryption/decryption oracle only before receiving the challenge ciphertext.
 
     \item IND-CCA2: indistinguishable under \emph{adaptive} CCA.
     
-    The adversary can query the decryption oracle also after receiving the challenge ciphertext, under the condition that it does not submit the challenge ciphertext to the oracle.
+    The adversary can query the encryption/decryption oracle also after receiving the challenge ciphertext, under the condition that it does not submit the challenge ciphertext to the oracle.
     IND-CCA2 is therefore called adaptive since the adversary can customise its requests to the oracle depending on the specific challenge ciphertext.
   \end{itemize}
 
@@ -32,7 +32,7 @@
   \begin{itemize}
     \item the cryptosystem is a public key cryptosystem,
     \item the challenger also acts as the decryption oracle,
-    \item the challenger makes no decryption queries before receiving the challenge.
+    \item the first query that the adversary makes to the challenger is the challenge request.
   \end{itemize}
 
   \begin{figure}[h!]
@@ -99,7 +99,10 @@
     If the game based approach/challengers and distinguishers confuse you, I implore you to stay after class and ask questions.
   \end{tcolorbox}
 
-  In the single query IND-CCA2 game, we can only ask the challenger for a single decryption after we have received the challenge ciphertext $c^*$, and we know that we cannot ask the challenger to decrypt $c^*$.
+  In the single query IND-CCA2 game, we can only ask the challenger for a single encryption/decryption after we have received the challenge ciphertext $c^*$, and we know that we cannot ask the challenger to decrypt $c^*$.
+  Here we are also forbidden from encrypting $m_0, m_1$ ourselves and from asking the challenger for new encryptions of $m_0, m_1$.
+  Without this restriction, the game would be no different from the IND-CPA game.
+  
   However, notice that textbook RSA is malleable.
 
   Let $e$ be the public exponent, let $n$ be the RSA modulus, and let $a, b$ be two messages.
