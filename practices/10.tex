@@ -1,0 +1,85 @@
+\documentclass{practice}
+
+\title{10}
+\subtitle{Probabilistic encryption \& ElGamal-type cryptosystems}
+\date{\DTMdate{2024-11-13}}
+
+\begin{document}
+\maketitle
+
+\begin{task}{A need for semantic security}
+  Let $\Pi$ be a deterministic, public key cryptosystem (e.g. textbook RSA) with the encryption algorithm $\Enc$.
+  Let there be an election with $78$ possible candidates\footnote{This was the number of candidates in Estonia for the 2024 European Parliament elections.}, where voters encrypt votes with the election's public key $\pk$.
+  The encrypted votes are then displayed on a public bulletin board and associated with the voter's names such that every voter can verify that their ballot was \emph{recorded as cast}.
+
+  What can you learn about the votes of voters by observing the bulletin board?
+  What can you do to improve this simple election scheme?
+\end{task}
+
+\begin{task}{ElGamal}
+  Let $g = 2$ be the ElGamal public key in the field $\ZZ_{23}$.
+  \begin{enumerate}
+    \item What is the set of possible messages for this instance?
+    \item Let $x = 3$ be Alice's private key.
+    What is Alice's ElGamal public key?
+    \item Let $m = 3$ be the message Bob wants to send to Alice.
+    Let $r = 4$ be the encryption randomness.
+    What is Bob's ciphertext?
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Precious randomness}
+  Show that if Eve knows the encryption randomness $r=4$ of Bob, she can decrypt the ciphertext that Bob sent Alice.
+
+  Can she decrypt subsequent ciphertexts sent by Bob?
+\end{task}
+
+\begin{task}{IND-CCA2}
+  Show that ElGamal does not have IND-CCA2.
+\end{task}
+
+\begin{task}{Lifted Elgamal}
+  Show that by encrypting $g^m$ instead of $m$, ElGamal becomes additively homomorphic.
+  What is a necessary constraint for lifted ElGamal to be usable in practice?
+  
+  Can you think of a use-case which benefits from lifted ElGamal?
+\end{task}
+
+\newpage
+
+\begin{task}{Correctness of Cramer-Shoup}
+  Show that the decryption identity of the Cramer-Shoup cryptosystem holds.
+\end{task}
+
+\begin{task}{A custom instance}
+  Let $g_1=2, g_2=3$ be two generators for the Cramer-Shoup cryptosystem in the field $\ZZ_{23}$.
+  Let $H$ be a hash function defined\footnotemark{} as $H_{q}(a, b, c) = (a + b + c) \bmod{q}$.
+  For this particular instance, the hash function is $H_{11}$.
+  \begin{enumerate}
+    \item Let $(4, 3, 5, 2, 7)$ be Alice's private key.
+    What is her public key?
+    % c = 18
+    % d = 12
+    % h = 13
+    \item Let $m = 3$ be the message Bob wants to send to Alice.
+    Let $r = 4$ be the encryption randomness.
+    What is Bob's ciphertext?
+    \item Why do we use $H_{11}$ instead of $H_{23}$?
+    \item Is $(4, 3, 6, 2)$ a valid ciphertext sent to Alice?
+    \item Let $(6, 18, 9, 12)$ be a ciphertext received by Alice.
+    What message does Alice decrypt it to?
+    % m = 3
+    % r = 9
+    % u1 = 6
+    % u2 = 18
+    % e = 9
+    % a = 0
+    % v = 12
+  \end{enumerate}
+  \footnotetext{%
+    In practice, a cryptographic hash function should be used.
+    We will cover hash functions next week.%
+  }%
+\end{task}
+
+\end{document}
