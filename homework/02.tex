@@ -108,8 +108,10 @@
   Answer the following:
   \begin{enumerate}
     \item What is the discrete logarithm of $R_t$ to the base $R_a$? \textit{(1 point)}
-    \item Is the discrete logarithm problem (DLP) intractable in this group?
-    In other words, do we have an efficient algorithm for solving the DLP in this group?
+    \item Is the discrete logarithm problem (DLP) intractable in this type of group?
+    In other words, do we have an efficient algorithm for solving the DLP in the group of rotational symmetries of a regular polygon?
+    For example, suppose a polygon with $2^{3072}$ vertices.
+
     Why yes/why no.
     \textit{(1 point)}
   \end{enumerate}
@@ -166,7 +168,7 @@
   \begin{itemize}
     \item Draw the encryption and decryption processes for at least 3 blocks.
     \textit{(1 point)}
-    \item What happens to the plaintext when the 8\textsuperscript{th} bit of the second ciphertext block is flipped?
+    \item What happens to an $n$-block plaintext, with $n \ge 3$, when the 8\textsuperscript{th} bit of the second ciphertext block is flipped?
     \textit{(1 point)}
   \end{itemize}
 \end{task}
@@ -175,7 +177,7 @@
   For each of the following, determine the $\Oh$ complexity as closely as you can, and prove it.
   For example, if the algorithm runs in $\Oh(n^2)$, you should say $\Oh(n^2)$ and not $\Oh(n^3)$, even though both hold.
 
-  If you prove the complexity using $n_0, c$, show the reasoning/calculations on how you obtained them and include a graph to visually confirm the values (e.g. with GeoGebra).
+  If you prove the complexity using $n_0, c$, \emph{show the reasoning/calculations} on how you obtained them and \emph{include a graph} to visually confirm the values (e.g. with GeoGebra).
   Graphically finding the values will not give you full points, and you will not be able to do so during the exam.
 
   Here $\log$ denotes the binary logarithm, i.e. $\log_2$.
@@ -225,7 +227,7 @@
     \item \textit{(1 point)}
     \begin{algorithmic}[1]
       \Procedure{recursive}{$n$}
-      \If{$n \leq q$} 
+      \If{$n \leq 1$} 
         \Return{$n$}
       \EndIf
       \State\Return{\Call{recursive}{$n - 1$} + \Call{recursive}{$n - 2$}}
