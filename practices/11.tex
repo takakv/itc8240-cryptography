@@ -1,0 +1,120 @@
+\documentclass{practice}
+
+\title{11}
+\subtitle{Digital signatures \& hash functions}
+\date{\DTMdate{2024-11-20}}
+
+\newcommand*{\MAC}{\mathsf{MAC}}
+
+\begin{document}
+\maketitle
+
+\begin{task}{Pen and paper}
+  Let $p = 5, q = 7$ be two primes.
+  Let $e = 5$ be the RSA public exponent.
+  \begin{enumerate}
+    \item Compute Alice's signing key.
+    What is her verification key?
+    \item What is Alice's signature on the message $m = 4$.
+    \item Alice sends Bob the signature $\sigma = 7$ along with the message $m = 5$.
+    Should Bob accept Alice's signature?
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Forgery galore}
+  % d = 27
+  Let $(55, 3)$ be Alice's RSA public key.
+  The signature scheme is textbook RSA.
+  \begin{enumerate}
+    \item Show that Mallory can produce an \emph{existential forgery} under a \emph{key-only} attack (EF-KOA).
+    That is, that Mallory can create a valid message-signature pair when knowing only the public key.
+    \item Show that Mallory can produce an \emph{existential forgery} under an adaptive \emph{chosen-message} attack (EF-CMA).
+    That is, that Mallory can obtain a signature for a \emph{fresh}\footnotemark{} message of her choice, when given access to a signing oracle.
+    \footnotetext{\enquote{Fresh} means that Mallory must create a signature for a message that she did not submit to the signing oracle.}
+
+    E.g. suppose that Mallory queries the signing oracle to get the message-signature pairs $(3, 42), (8, 2)$.
+    How can Mallory produce a valid signature for the message $m = 24$?
+    \item Show that Mallory can produce a \emph{universal forgery} under an adaptive \emph{chosen-message} attack (UF-CMA).
+    That is, that Mallory can produce a valid signature for any message/a message issued by the challenger, when given access to a signing oracle.
+    Mallory is not allowed to submit the challenge message to the oracle.
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Not very cryptographic}
+  Consider the hash function $H$ given by:
+  \[
+    H:\{0,1\}^5 \times \{0,1\}^5 \to \{0,1\}^5;\;
+    (a,b) \to a \oplus b.
+  \]
+  \begin{enumerate}
+    \item Show that the hash function does not have collision resistance.
+    \item Find a pre-image of \texttt{10101}.
+    \item Given the pre-image (\texttt{11001}, \texttt{10111}), find a second pre-image of \texttt{01110}.
+  \end{enumerate}
+
+  Security properties aside, why would this function not typically be called a hash function?
+\end{task}
+
+\begin{task}{One down, two to go}
+  Let $H:\{0,1\}^* \to \{0,1\}^n$ be a hash function that is second pre-image and collision resistant.
+  Let $H':\{0,1\}^* \to \{0,1\}^{n+1}$ be the hash function given by the rule
+  \[
+    H'(x) =
+    \begin{cases}
+      0||x&\text{if } x\in\{0,1\}^n,\\
+      1||H(x)&\text{otherwise}.
+    \end{cases}
+  \]
+  Show that $H'$ is not first pre-image resistant, but is still second pre-image and collision resistant.
+\end{task}
+
+\begin{task}{OFB-MAC}
+  The CBC-MAC construction builds a MAC function from a block cipher by taking the last encrypted block of the CBC-mode encryption.
+  We can similarly define the OFB-MAC construction where the last encrypted block of OFB-mode encryption is taken as the tag.
+  \begin{enumerate}
+    \item Draw the OFB-MAC construction.
+    \item Show that the scheme is insecure.
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Failed authentication}
+  % m = 0000 1010
+  % k = 1010 1010
+  Consider the keyed MAC defined by $\MAC_k(m) = m \oplus H(k)$ which works on 1-byte messages.
+  $H$ is a key derivation function which derives the 1-byte MAC secret from a key $k$.
+
+  Suppose that you intercept the message-tag pair $(\texttt{0000 1010}, \texttt{1010 0000})$ where the message $\texttt{0000 1010}$ represents a transfer of $10$ euros.
+  Forge a tag for the message representing a transfer of 100 euros.
+\end{task}
+
+\begin{task}{Encrypt-then-MAC}
+  Let the encryption function be the OTP.
+  Let the MAC function be HMAC.
+  Let the encryption and MAC keys be different.
+
+  Consider the encrypt-then-mac construction given by:
+  \begin{enumerate}
+    \item Encrypt a message with the OTP using the encryption key.
+    \item Create a MAC tag for the ciphertext using the MAC key.
+    \item Send the ciphertext and tag to the recipient.
+  \end{enumerate}
+
+  Does the MAC fully authenticate the sender's intended message?
+\end{task}
+
+\begin{task}{MAC-then-Encrypt}
+  Consider the mac-then-encrypt construction given by:
+  \[
+    c \gets \Enc_k(m||\MAC_k(m)),
+  \]
+  where:
+  \begin{itemize}
+    \item $\Enc$ is AES in CBC mode,
+    \item $\MAC$ is CBC-MAC using AES,
+    \item $\Enc$ and $\MAC$ use the same initialisation vector and IV.
+  \end{itemize}
+
+  Show that this scheme does not provide message integrity.
+\end{task}
+
+\end{document}
