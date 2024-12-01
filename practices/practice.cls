@@ -76,3 +76,4 @@
 \RequirePackage{tabularx}
 \RequirePackage{multirow}
 \RequirePackage{booktabs}
+\renewcommand*{\arraystretch}{1.2}
