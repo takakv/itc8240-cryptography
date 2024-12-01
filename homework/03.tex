@@ -1,0 +1,193 @@
+\documentclass{homework}
+\newcommand*{\MAC}{\mathsf{MAC}}
+
+\title{03}
+\date{\DTMdate{2024-12-06}}
+
+\begin{document}
+\maketitle
+
+\textbf{Organisational details}
+\begin{itemize}
+  \item You can submit assignments up to 1 week late, however, late assignments incur a 50\% grade penalty.
+  After the 1 week grace period the assignment's grade will be 0.
+  \item Your submission must be a PDF.
+  You can write solutions by hand and scan/photograph them, or write them using \LaTeX{} (recommended).
+  If you use MS Word, you must use the equation editor for typesetting the mathematics.
+  \begin{itemize}
+    \item If you write solutions by hand, please make sure that the scans/pictures are of good quality (high resolution, good contrast, no blur).
+    \item If your submission is not legible or is otherwise of poor quality (e.g. crossed out solutions, scribbles, \dots) we will not grade the impacted task(s).
+    \item If you write code to help you solve tasks, add the code file(s) to your Moodle submission or push the code to a \emph{private} GitHub repository.
+    Add \texttt{takakv} as a collaborator.
+  \end{itemize}
+  \item You must explicitly write out the reasoning for your solutions.
+  Providing an unexplained answer will give you no points.
+  \begin{itemize}
+    \item Brute force is not a solution!
+    \item If you write code, you must comment your code and explain what it does and why are you doing things in that way.
+  \end{itemize}
+\end{itemize}
+
+\vspace*{1em}
+
+\textbf{About help}
+\begin{itemize}
+  \item Homework assignments are individual work.
+  While you may discuss the tasks with one-another and give hints or suggest resources, all submissions must be your own work, stem from your own thought process, and be written in your own words.
+  You are not allowed to share answers, even for cross-checking.
+  \item You may not use third party/online tools to solve tasks, but you may use them to check your tasks.
+  \item If you use external resources\footnote{Anything that is not part of lecture or practice slides.} to help you with your homework, e.g. a CSE\footnote{Cryptography Stack Exchange} post or an article, you must properly cite that resource.
+  \item If we catch you using someone else's work, we will report you for plagiarism.
+  If we catch you colluding with a coursemate, we will report both of you for plagiarism.
+  In both cases you will fail the course.
+\end{itemize}
+
+\newpage
+
+\begin{task}{Hybrid gaming}
+  A hybrid encryption scheme uses public key cryptography for the key exchange/establishment, but symmetric cryptography for subsequent message encryption (and authentication).
+
+  Let $g$ be the generator of a group $\GG$ with a prime number $q$ of elements and where the DLP is hard.
+  Suppose that Alice and Bob know each-other's ElGamal public keys.
+  
+  \begin{enumerate}
+    \item Show how Alice and Bob can compute a shared secret $x$ without exchanging any messages. \textit{(1 point)}
+    \item Suppose now that Alice and Bob use $H(x)$ as an AES secret key, where $H$ is a key-derivation function which derives a $128$-bit key from $x$.
+    Subsequent messages exchanged by Bob and Alice are encrypted with AES-GCM.
+
+    Is this protocol IND-CCA2 secure? (\textit{1 point})
+  \end{enumerate}
+\end{task}
+
+\begin{task}{I am the senate}
+  You are a political spy for the duchy of Mallea who has infiltrated the senate of the republic of Cecea.
+  The senate of Cecea is holding emergency elections to pass a bill mandating the use of IND-CCA2 cryptosystems.
+  This would be bad news for Mallea, so your job is to prevent the bill from passing.
+
+  Let $g$ be the generator of a group $\GG$ with a prime number $q$ of elements and where the DLP is hard.
+  The elections are conducted with the lifted ElGamal cryptosystem, i.e. ElGamal where $g^m$ is encrypted instead of the message $m$.
+  No votes are individually decrypted.
+  Instead, all the encrypted votes are multiplied together and only the end result is decrypted.
+  This maintains voting secrecy.
+  This means that all those in favour of the new bill must encrypt $g^1$ and those against it must encrypt $g^0$.
+
+  The senate has 101 members, you included, and each senator has one vote.
+  Therefore, the bill passes if the end result is at least $g^{51}$.
+  Your intel tells you that at least 70 senators will vote in favour of the bill, and at least $14$ senators will vote against the bill.
+  This information is not known to anyone else.
+
+  How do you manipulate the election such that the bill does not pass?
+  You are not able to influence the decision of other senators or swap/drop their ballots.
+  
+  \textit{(2 points)}
+\end{task}
+
+\newpage
+
+\begin{task}{A shared problem}
+  Let the hash function $H_n$ be defined as
+  \[
+    H_n: \ZZ_n \times \ZZ_n \to \ZZ_n;\; (a, b) \to (ab) \bmod{n}.
+  \]
+
+  % d = 27
+  Let the RSA public key of an access control system (ACS) be $(55, 3)$.
+  The ACS gives access to anyone who can present a valid access token---an unordered pair of integers---signed by the ACS and which has not already been used.
+  That is, each token can only be used once.
+  Furthermore, suppose that factoring $55$ is hard, i.e. you cannot find the private key.
+
+  The ACS issues a textbook RSA signature over the hash of the token computed with $H_{55}$.
+  That is, to sign the token $(a, b)$, the ACS computes $\sigma \gets [H_{55}(a,b)]^d \bmod{55}$ where $d$ is the private key of the ACS.
+
+  Using your hacking skills, you are able to sniff which valid token-signature pairs have been previously presented to the ACS.
+  You recover the following token-signature pairs:
+  $[(6, 15), 40], [(7, 16), 18], [(8, 17), 16]$.
+
+  How can you gain access with the token $(4, 28)$?
+  Explain your approach and present the token-signature pair.
+  \textit{(2 points)}
+\end{task}
+
+\begin{task}{Uninvited guest}
+  % p1 = 3
+  % q1 = 29
+  % p2 = 11
+  % q2 = 17
+  % p3 = 5
+  % q3 = 23
+
+  % m = 7
+  Alice wants to meet her cryptographer friends and decides to send an invitation with the time and place (encoded into an integer) to her three friends.
+  The invitation sent is the same and is encrypted with textbook RSA.
+  The RSA public keys of her friends are $\pk_1 = (87, 3), \pk_2 = (187, 3), \pk_3 = (115,3)$.
+
+  Eve intercepts the invitations $c_1 = 82, c_2 = 156, c_3 = 113$.
+  Assuming that Eve cannot recover the secret keys from the public keys, how can Eve recover the original invitation/message?
+  What is the message?
+
+  Show your solution process/calculations.
+  You are allowed to use a calculator to compute: multiplication, modulo, and multiplicative inverses.
+
+  \textit{(2 points)}
+\end{task}
+
+\newpage
+
+\begin{task}{Who cracks first?}
+  Let $\GG$ be a group of prime order $q$ generated by $g$ where the DLP is hard.
+  Let $q$ have $n$ bits, with $2^{n-1} < q < 2^n$.
+
+  Let $\mathit{iv}$ be a fixed $n$-bit integer.
+  The hash function $H_{\mathit{iv}}$ is then defined as follows:
+  \begin{enumerate}
+    \item Given an input $m$ of length $l\cdot n$ bits with some integer $l$, split it into $n$-bit blocks $m_1, m_2, \dots, m_l$.
+    Each block $𝑚_i$ can be viewed as an $n$-bit integer.
+    \item Let $h_0 \gets g^{\mathit{iv}}$.
+    Let $h_i \gets h^{m_i}_{i-1}$ for all $i\in\{1,\dots,l\}$.
+
+    I.e. $h_1 = \bigl(g^{\mathit{iv}}\bigr)^{m_1}$, $h_2 = \bigl(g^{\mathit{iv} \cdot m_1}\bigr)^{m_2}$, \dots
+    \item $H_{\mathit{iv}}(m) \overset{\mathit{def.}}{=} h_l$.
+    That is, the hash of $m$ under $H_{\mathit{iv}}$ is $h_l$.
+  \end{enumerate}
+
+  Answer the following:
+
+  \begin{enumerate}
+    \item Show that this hash function does not have second pre-image resistance for $l \ge 2$.
+    \textit{(2 points)}
+
+    Hint: multiplication is commutative.
+
+    \item Explain why this hash function is first pre-image resistant.
+    \textit{(2 points)}
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Authentic$\infty$tion}
+  Let $H$ be a publicly known collision resistant hash function with $n$-bit outputs.
+  Let $\Enc$ be the encryption algorithm of a secure block cipher with a block and key-size of $n$ bits.
+
+  Consider the keyed MAC construction given by:
+  \[
+    \MAC_{\sk}(m) \overset{\textit{def.}}{=} \Enc_{H(m)}(\sk).
+  \]
+  That is, instead of encrypting $H(m)$ with the secret key $\sk$, $H(m)$ is used as the block cipher encryption key, and the secret $\sk$ is encrypted instead.
+
+  \begin{enumerate}
+    \item Show that this MAC scheme is not secure against universal forgery attacks.
+    That is, find an efficient way to forge a tag on \emph{any} message.
+    \textit{(2 points)}
+
+    \item Why use $H(m)$ instead of using $m$ directly as the encryption key?
+    \textit{(1 point)}
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Mind the group (bonus)}
+  Let $g = 5$ be the ElGamal group generator in the field $\ZZ_{23}$.
+  Show that ElGamal does not have IND-CPA in this group.
+
+  \textit{(2 points)}
+\end{task}
+
+\end{document}
