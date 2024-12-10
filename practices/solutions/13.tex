@@ -1,0 +1,271 @@
+\documentclass{practice}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=20cm,compat=1.18}
+\usepgfplotslibrary{external,fillbetween}
+
+\newcommand*{\MAC}{\mathsf{MAC}}
+
+\usepackage{subcaption}
+
+\usepackage[dvipsnames,hyperref]{xcolor}
+
+\begin{document}
+\begin{center}
+  \textbf{Practice 13, solutions}
+\end{center}
+
+\begin{task}{Simple identification}
+  The protocols for public key encryption and digital signatures are given in the slides.
+
+  \begin{figure*}[h!]
+    \centering
+    \subfloat[Symmetric encryption]{
+      \begin{tabularx}{6.5cm}{@{}lXl@{}}
+        \textbf{Prover} & & \textbf{Verifier}\\
+        \midrule
+        & & $c \getsu \{0,1\}^k$\\
+        &\begin{tikzpicture}[trim left=0cm,trim right=\linewidth] % https://tex.stackexchange.com/a/58359
+            \node (A) at (0, 0) {};
+            \node (B) at (\linewidth,0) {};
+            \draw[<-] (A) -- (B) node[above,midway] {$c$};
+          \end{tikzpicture}&\\
+        $r \gets \Enc_{\sk}(c)$\\
+        &\begin{tikzpicture}[trim left=0cm,trim right=\linewidth]
+            \node (A) at (0, 0) {};
+            \node (B) at (\linewidth-2\pgflinewidth, 0) {};
+            \draw[->] (A) -- (B) node[above,midway] {$r$};
+          \end{tikzpicture}&\\
+        & & $c \iseq \Dec_{\sk}(r)$
+      \end{tabularx}
+    }
+    \qquad
+    \subfloat[MAC]{
+      \begin{tabularx}{6.5cm}{@{}lXl@{}}
+        \textbf{Prover} & & \textbf{Verifier}\\
+        \midrule
+        & & $c \getsu \{0,1\}^k$\\
+        &\begin{tikzpicture}[trim left=0cm,trim right=\linewidth] % https://tex.stackexchange.com/a/58359
+            \node (A) at (0, 0) {};
+            \node (B) at (\linewidth,0) {};
+            \draw[<-] (A) -- (B) node[above,midway] {$c$};
+          \end{tikzpicture}&\\
+        $r \gets \MAC_{\sk}(c)$\\
+        &\begin{tikzpicture}[trim left=0cm,trim right=\linewidth]
+            \node (A) at (0, 0) {};
+            \node (B) at (\linewidth-2\pgflinewidth, 0) {};
+            \draw[->] (A) -- (B) node[above,midway] {$r$};
+          \end{tikzpicture}&\\
+        & & $r \iseq \MAC_{\sk}(c)$
+      \end{tabularx}
+    }
+    \end{figure*}
+\end{task}
+
+\begin{task}{Evaluating properties}
+  \begin{enumerate}
+    \item Completeness
+    
+    The protocol is complete if for a true statement, an honest verifier accepts the proof of an honest prover.
+    That is, a proof for a true statement should always verify correctly.
+    \item Soundness
+    
+    The protocol is sound if an honest verifier does not accept the proof for a false statement made by a dishonest prover, except with some negligible probability.
+    That is, it should not be possible to prove wrong things.
+    \item Zero-knowledge
+    
+    The protocol has zero knowledge if a (potentially dishonest) verifier cannot learn anything from the proof of a true statement, other than that the statement is true.
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Schnorr's identification protocol}
+  \begin{enumerate}
+    \item The protocol is complete.
+    
+    \begin{proof}
+      \[
+        g^r = g^{u + cx} = g^u \cdot g^{cx} = a\cdot \bigl(g^{x}\bigr)^c = a\cdot h^c,
+      \]
+      where $g, r, a, h, c$ are all known to the verifier.
+    \end{proof}
+
+    \item The protocol is special sound.
+    
+    \begin{proof}
+      Let $(a, c, r)$, $(a, c', r')$ be two accepting transcripts such that $c \neq c'$.
+      This implies that $r \neq r'$ since $x, u$ are the same when computing $r$ and $r'$.
+      Then
+      \[
+        r - r' = u + cx - u - c'x = x(c - c')
+      \]
+      and so $x = (r - r')/(c - c')$.
+
+      It follows that the prover actually knows the discrete logarithm $x = \log_g(h)$ since from
+      \[
+        g^r = ah^c,\qquad g^{r'} = ah^{c'}
+      \]
+      and so
+      \[
+        h = g^{(r-r')/(c - c')}.
+      \]
+      The discrete logarithm can be computed since $r, r', c, c'$ are known and the inverse of $c - c'$ is efficiently computable as the modulus is known, e.g. with the EEA.
+
+      In more detail, since $a = g^r/h^c = g^{r'}/h^{c'}$ we have that
+      \begin{alignat*}{2}
+        && g^{r'} \cdot h^{-c'} &= g^r \cdot h^{-c} \\
+        \Leftrightarrow\quad&& h^c \cdot h^{-c'} &= g^r \cdot g^{-r'}\\
+        \Leftrightarrow\quad&& h^{c - c'} &= g^{r - r'} \\
+        \Leftrightarrow\quad&& h^{c - c'} \cdot h^{1/(c - c')} &= g^{r - r'} \cdot h^{1/(c - c')} \\
+        \Leftrightarrow\quad&& h &= g^{(r-r')/(c - c')}.
+      \end{alignat*}
+    \end{proof}
+
+    Intuitively, after sending the announcement $a$, a prover that does not know $x$ can answer at most one challenge correctly.
+    That is, if the prover guesses the challenge correctly, it can craft a commitment and response such that the transcript is accepting\footnotemark{}.
+    This happens with probability $1/q$.
+    The protocol is thus sound with soundness error $1/q$.
+    \footnotetext{See the simulation principle in the proof of the zero-knowledge property.}
+
+    \item The protocol is special honest-verifier zero-knowledge.
+    
+    \begin{proof}
+      In the honest protocol execution, $u$ is sampled uniformly at random and so $a \gets g^u$ is randomly distributed.
+      $c$ is also sampled uniformly at random, and thus $r \gets u + cx \pmod{q}$ is randomly distributed, since $u, c$ are randomly distributed.
+
+      When not bound by the sequential order of the protocol steps, an accepting transcript can be generated with:
+      \begin{enumerate}
+        \item $r \getsu \ZZ_q$
+        \item $c \getsu \ZZ_q$
+        \item $a \gets g^r\cdot h^{-c}$
+      \end{enumerate}
+
+      Indeed, after having picked a response and the challenge, the simulator must pick the commitment such that the verification equation would hold:
+      \[
+        g^r = ah^c
+        \qquad\iff\qquad
+        g^r h^{-c} = a.
+      \]
+      Since $r, c$ are distributed uniformly at random, so is $a$.
+      Each of the three steps is efficient.
+
+      It follows that all components in the transcripts of both real and simulated conversations are uniformly distributed, and thus the distributions are identical.
+    \end{proof}
+
+    If the verifier did not pick the challenge at random, then the simulator would not be efficient.
+    Indeed, the probability that the simulator's randomly sampled challenge would correspond to the specific challenge of a dishonest verifier would be $1/q$, as the simulator samples challenges at random.
+    Note that since we do not know the challenge generation procedure of the dishonest verifier, the simulator cannot simulate it/pick challenges following the same algorithm.
+
+    This means that $q$ tries are needed on average to find an accepting transcript which would match the probability distribution of a transcript of a real conversation between the honest prover and dishonest verifier.
+    The running time of the simulator is thus $\Oh(q)$ which is exponentially large with respect to the security parameter/bit-length of group size.
+    I.e. if $q$ is $\lambda$ bits long, then the simulator running time is $\Oh\bigl(2^\lambda\bigr)$.
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Fiat-Shamir identification protocol}
+  \begin{tcolorbox}[title=Warning!]
+    The exercise I have given you is misleading (has to do with QRs and NQRs) as I forgot that we are working modulo a composite, and not modulo a prime.
+    Modulo a composite, the product of two NQRs might not be a QR.
+    Likewise, the product of an NQR and a QR might be a QR.
+    \tcblower
+    See slide 15 for the correct soundness proof.
+    The soundness proof below is presented with the same misleading assumptions.
+  \end{tcolorbox}
+
+  \begin{enumerate}
+    \item The protocol is complete.
+    \[
+      r^2 \equiv \bigl(x^cu\bigr)^2 \equiv x^{2c}u^2 \equiv \bigl(x^2\bigr)^ca \equiv y^ca \pmod{n},
+    \]
+    where $r, y, c, a$ are all known to the verifier
+
+    \item The protocol is $1/2$-sound.
+    
+    \begin{itemize}
+      \item When $c = 0$ we have for an honest execution that $r \gets u$ and since $r^2 = u^2 = a$, the verifier gets the guarantee that the announcement $a$ made by the prover is indeed a quadratic residue.
+      Knowing that the prover indeed announces some quadratic residue $a$ is important information to the verifier.
+      However, when $c = 0$, the verification is independent of the witness $x$.
+      \item When $c = 1$ we have for an honest execution that $r \gets xu$ and since $r^2 = x^2u^2 = ya$ the verifier gets the guarantee that $ya$ is a quadratic residue.
+      
+      The verifier can be certain that $r^2$ is a quadratic residue since it computes it from $r$ and so the property follows by definition.
+      In turn, this implies that either $y$ and $a$ are quadratic residues or that neither $y$ nor $a$ are quadratic residues\footnotemark{}.
+      \footnotetext{The product of two QRs or of two NQRs is a QR. Only the product of a NQR and a QR is a NQR.}
+
+      The fact that $y$ is a QR is what the proof is supposed to prove, and $y$ must be a QR if $a$ is a QR.
+      Thus, the verifier needs a way to verify that $a$ is a quadratic residue, which is done exactly by the case where $c = 0$.
+
+      If the verifier did not check whether $a$ is indeed a quadratic residue, the prover could set $a$ to be a NQR when $y$ is a NQR.
+      The verification equation would then hold, and the verifier would think that $y$ is a QR when this is not the case, thus making the protocol unsound.
+
+      Since the prover must announce $a$ before the verifier decides whether it wants to verify whether $y$ or $a$ is a QR, it cannot cheat without the risk of getting caught.
+      The prover could try to guess for each protocol run whether the challenger picks $c = 0$ or $c = 1$ but the probability of guessing this correctly after $k$ protocol runs is $2^{-k}$ which can be made as small as needed.
+
+      For example, let $y$ be an NQR.
+      In an attempt to convince the verifier that $y$ is a QR, the prover selects some NQR $a$ and hopes that the verifier selects $c = 1$.
+      However, if the verifier now selects $c = 0$, then $r^2 \not\equiv a$ and the verifier sees that the prover does not announce $a$ correctly and refuses to deal with the prover further.
+
+      In summary, the verifier is convinced with probability $1/2$ that $a$ is a QR.
+      By successfully repeating the protocol $k$ times, the probability increases.
+      If the verifier is convinced that $a$ is a QR, then the check $r^2 \equiv ya \pmod{n}$ convinces the verifier that $y$ is a QR.
+      This check happens with probability $1/2$ and so the protocol is $1/2$-sound.
+
+      \textit{You can make this proof more formal by using a similar approach to the one in the previous exercise.
+      I.e., show what happens for two transcripts with the same $a$ value, but $c = 0$ and $c' = 1$.
+      Alternatively, see the proof in slide 15.}
+    \end{itemize}
+
+    \item The protocol is honest-verifier zero-knowledge.
+    
+    In the real conversation, all transcript components are uniformly distributed.
+    When not bound by the sequential order of the protocol steps, an accepting transcript can be generated with:
+    \begin{enumerate}
+      \item $r \getsu \ZZ_n$
+      \item $c \getsu \{0, 1\}$
+      \item $a \gets r^2\cdot y^{-c}$
+    \end{enumerate}
+    Since the modulus $n$ is known, the inverse of $y$ can be computed efficiently, e.g. with the EEA, without needing to know the factorisation of $n$.
+    Note that $y$ has an inverse as long as $p \neq y \neq q$.
+    If $y = p$ or $y = q$, there is no zero-knowledge proof to be made, as the verifier is already certain that $y$ is not a QR.
+    Since $r,c$ are distributed at random, so is $a$.
+
+    When $c = 0$, $y^0a \equiv a \equiv r^2 y^{0} \equiv r^2 \pmod{n}$ and the verification succeeds.
+    When $c = 1$, $ay^1 \equiv r^2y^{-1}y^1 \equiv r^2 \pmod{n}$ and the verification succeeds.
+
+    It follows that all components in the transcripts of both real and simulated conversations are uniformly distributed, and thus the distributions are identical.
+
+    If the verifier does not pick the challenge at random, then the simulator can still efficiently simualte the proof.
+    The probability that the simulator's randomly sampled challenge corresponds to the specific challenge of a dishonest verifier is $1/2$, as the simulator samples challenges at random.
+
+    This means that on average, it takes $2$ tries to match the probability distribution of the transcript of a real conversation between the honest prover and dishonest verifier.
+    The running time of the simulator thus remains efficient.
+  \end{enumerate}
+\end{task}
+
+\begin{task}{Sounds like cheating}
+  Let the prover be malicious and attempt to convince the verifier that she knows the square root of $y$ when this is not the case.
+  The prover can then use the standard simulation technique to compute $r$ and $a$, and then adjust the values if necessary:
+  \begin{enumerate}
+    \item The prover samples $r \getsu \ZZ_n$
+    \item The prover samples $c \getsu \{0,1\}$
+    \item The prover sets $a \gets r^2y^{-c}$
+    \item If $a \bmod 2 \neq c$, the prover sets $c \gets 1 - c$ (changes $0$ to $1$ or vice versa) and recomputes $a$.
+    The following cases illustrate why $a \bmod 2 = c$ is required and why the prover can cheat:
+    \begin{enumerate}
+      \item Let $a$ be even, i.e. $a \bmod 2 = 0$.
+      \begin{itemize}
+        \item If $c = 0$ then the verification $ay^0 \equiv a \equiv r^2y^{0} \equiv r^2 \pmod{n}$ succeeds.
+        \item If $c = 1$ then the verification $ay^1 \equiv r^2y^{0}y^1 \equiv r^2y \not\equiv r^2 \pmod{n}$ fails, which is why $c = 0$ is needed.
+      \end{itemize}
+      \item Let $a$ be odd, i.e. $a \bmod 2 = 1$.
+      \begin{itemize}
+        \item If $c = 0$ then the verification $ay^0 \equiv a \equiv r^2y^{-1} \not\equiv r^2 \pmod{n}$ fails, which is why $c = 1$ is needed.
+        \item If $c = 1$ then the verification $ay^1 \equiv r^2y^{-1}y^1 \equiv r^2 \pmod{n}$ succeeds.
+      \end{itemize}
+    \end{enumerate}
+
+    \item If $a \bmod 2 \neq c$ still, the prover starts over from step 1.
+  \end{enumerate}
+
+  Since the prover can anticipate the challenge value of the prover, it can simualte accepting transcripts, and use the $a, r$ values in the real protocol execution to always convince the verifier. 
+\end{task}
+
+\end{document}
